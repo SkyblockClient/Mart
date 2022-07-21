@@ -127,8 +127,8 @@ const prepareForSkyclientPane = async () => {
     : window.chosen;
   el("main").innerHTML = `
     <h1 class="text-3xl">3. Choose what you want in Skyclient</h1>
-    <p>Click on a mod/pack to add/remove it.</p>
-    <skyclient-stuff></skyclient-stuff>
+    <p class="mt-2">Click on a mod/pack to add/remove it.</p>
+    <skyclient-stuff class="mt-2"></skyclient-stuff>
   `;
   el("#next").remove();
 };

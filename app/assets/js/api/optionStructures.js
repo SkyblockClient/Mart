@@ -39,18 +39,18 @@ export class Mod {
       : "Other";
   }
   async isModInstalled(handle) {
-    const modFolder = await handle.getFolder("mods", true);
+    const modFolder = await handle.getFolder("mods");
     return await modFolder.doesFileExist(this.fileName);
   }
   async installMod(handle) {
     console.log(`${new Date().toISOString()}: getting folder mods`);
-    const modFolder = await handle.getFolder("mods", true);
+    const modFolder = await handle.getFolder("mods");
     console.log(`${new Date().toISOString()}: downloading file ${this.fileName}`);
     await modFolder.downloadToFile(this.fileName, this.fileURL);
   }
   async removeMod(handle) {
     console.log(`${new Date().toISOString()}: getting folder mods`);
-    const modFolder = await handle.getFolder("mods", true);
+    const modFolder = await handle.getFolder("mods");
     console.log(`${new Date().toISOString()}: deleting file ${this.fileName}`);
     await modFolder.deleteFile(this.fileName);
   }
@@ -66,7 +66,10 @@ export class Bundle {
     this.packages = data.packages.concat(this.id).map((id) => {
       const mod = allMods.find((mod) => mod.id == id);
       return {
-        name: mod.file,
+        file: mod.file,
+        name: mod.display == this.name ? mod.id : mod.display,
+        id: mod.id,
+        desc: mod.description,
         url:
           mod.url ||
           `https://raw.githubusercontent.com/nacrt/SkyblockClient-REPO/main/files/mods/${mod.file}`,
@@ -77,5 +80,26 @@ export class Bundle {
       : data.categories?.includes("5;All PvP")
       ? "PvP"
       : "Other";
+  }
+  async installedMods(handle) {
+    const modFolder = await handle.getFolder("mods");
+    return await Promise.all(
+      this.packages.map(async (mod) => ({
+        ...mod,
+        installed: await modFolder.doesFileExist(mod.file),
+      }))
+    );
+  }
+  async removeMod(handle, mod) {
+    console.log(`${new Date().toISOString()}: getting folder mods`);
+    const modFolder = await handle.getFolder("mods");
+    console.log(`${new Date().toISOString()}: deleting mod ${mod.name}`);
+    await modFolder.deleteFile(mod.file);
+  }
+  async installMod(handle, mod) {
+    console.log(`${new Date().toISOString()}: getting folder mods`);
+    const modFolder = await handle.getFolder("mods");
+    console.log(`${new Date().toISOString()}: downloading mod ${mod.name}`);
+    await modFolder.downloadToFile(mod.file, mod.url);
   }
 }

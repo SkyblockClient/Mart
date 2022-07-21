@@ -1,11 +1,16 @@
 ///<reference path="neutralino.js" />
 export let SEPARATOR;
 export let doesFileExistNL;
+let CACHE_DIR;
 let recursiveDeleteNL;
 if (IS_NEUTRALINO) {
   console.debug(`initialization (Neutralino global)`);
   Neutralino.init();
   SEPARATOR = NL_OS === "Windows" ? "\\" : "/";
+  CACHE_DIR = (await Neutralino.os.getPath("cache")) + SEPARATOR + "MartJul21";
+  try {
+    await Neutralino.filesystem.createDirectory(CACHE_DIR);
+  } catch (e) {}
   doesFileExistNL = async (path) => {
     console.debug(`doesFileExist (Neutralino global): checking if ${path} exists`);
     try {
@@ -40,15 +45,6 @@ const downloadFile = async (url, path, onCors) => {
     return;
   }
   window.dlLocks.push(path);
-  const modCache = await susCacheAPI.open("modcache-jun11-2022");
-  console.log(`${new Date().toISOString()}: checking cache`);
-  const cached = await modCache.match(url);
-  console.log(`${new Date().toISOString()}: found in cache`);
-  if (cached) {
-    console.debug(`downloadFile (global): ${url} is cached`);
-    window.dlLocks.splice(window.dlLocks.indexOf(path), 1);
-    return cached;
-  }
   let response;
   try {
     response = await fetch(url, { cache: "force-cache" });
@@ -70,7 +66,6 @@ const downloadFile = async (url, path, onCors) => {
         }).toString()
     );
   }
-  await modCache.put(url, response.clone());
   window.dlLocks.splice(window.dlLocks.indexOf(path), 1);
   console.log(`${new Date().toISOString()}: done downloading file`);
   return response;
@@ -130,6 +125,13 @@ export class AnchorWeb {
     await this.handle.removeEntry(path, { recursive: true });
   }
   async downloadToFile(path, url, onCors = () => {}) {
+    const modCache = await window.caches.open("modcache-jun11-2022");
+    console.log(`${new Date().toISOString()}: checking cache`);
+    const cached = await modCache.match(url);
+    if (cached) {
+      console.log(`${new Date().toISOString()}: found in cache`);
+      return cached;
+    }
     const resp = await downloadFile(url, path, onCors);
     console.log(`${new Date().toISOString()}: got data`);
     if (!resp) return;
@@ -137,6 +139,8 @@ export class AnchorWeb {
     const writable = await handle.createWritable();
     await resp.body.pipeTo(writable);
     console.log(`${new Date().toISOString()}: written`);
+    await modCache.put(url, resp.clone());
+    console.log(`${new Date().toISOString()}: cached`);
   }
   async writeFile(path, text) {
     console.debug(`writeFile (AnchorWeb): writing ${path}`);
@@ -222,12 +226,22 @@ export class AnchorApp {
     console.groupEnd();
   }
   async downloadToFile(path, url, onCors = () => {}) {
+    const cacheLoc = CACHE_DIR + SEPARATOR + encodeURIComponent(url);
+    try {
+      await Neutralino.filesystem.getStats(cacheLoc);
+      console.log(`${new Date().toISOString()}: found in cache`);
+      await Neutralino.filesystem.copyFile(cacheLoc, this.path + SEPARATOR + path);
+      console.log(`${new Date().toISOString()}: written`);
+      return;
+    } catch (e) {}
     const resp = await downloadFile(url, path, onCors);
     if (!resp) return;
     const bytes = await resp.arrayBuffer();
     console.log(`${new Date().toISOString()}: got buffer`);
     await Neutralino.filesystem.writeBinaryFile(this.path + SEPARATOR + path, bytes);
     console.log(`${new Date().toISOString()}: written`);
+    await Neutralino.filesystem.copyFile(this.path + SEPARATOR + path, cacheLoc);
+    console.log(`${new Date().toISOString()}: cached`);
   }
   async writeFile(path, text) {
     console.debug(`writeFile (AnchorApp): writing ${path}`);
