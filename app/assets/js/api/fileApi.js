@@ -71,10 +71,15 @@ export class AnchorWeb {
   }
   async validate() {
     console.debug(`validate (AnchorWeb)`);
+    const folderName = this.handle.name.toLowerCase();
     if (this.handle.kind != "directory") {
       return "You didn't choose a folder. Please choose a folder, not a file.";
-    } else if (![".minecraft", "Minecraft"].includes(this.handle.name)) {
-      return "You didn't choose the Minecraft folder. Please choose a folder named .minecraft (or Minecraft on Mac).";
+    } else if (![".minecraft", "minecraft"].includes(folderName)) {
+      return (
+        "You didn't choose the Minecraft folder. You chose " +
+        folderName +
+        " instead. Please choose a folder named .minecraft (or minecraft on Mac)."
+      );
     }
   }
   async doesFileExist(path) {
@@ -152,14 +157,17 @@ export class AnchorApp {
   async validate() {
     console.debug(`validate (AnchorApp)`);
     const doesPathExist = await doesFileExistNL(this.path);
+    const folderName = this.path.split("/").pop().split("\\").pop();
     if (!doesPathExist) {
       return "The path you chose doesn't exist. Please choose a valid path.";
     } else if (!doesPathExist.isDirectory) {
       return "The path you chose doesn't point to a directory. Please choose a valid path.";
-    } else if (
-      ![".minecraft", "Minecraft"].includes(this.path.split("/").pop().split("\\").pop())
-    ) {
-      return "You didn't choose the Minecraft folder. Please choose a folder named .minecraft (or Minecraft on Mac).";
+    } else if (![".minecraft", "minecraft"].includes(folderName)) {
+      return (
+        "You didn't choose the Minecraft folder. You chose " +
+        folderName +
+        " instead. Please choose a folder named .minecraft (or minecraft on Mac)."
+      );
     }
   }
   async doesFileExist(path) {
