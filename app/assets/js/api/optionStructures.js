@@ -18,6 +18,22 @@ export class Pack {
       ? "PvP"
       : "Other";
   }
+  async isPackInstalled(handle) {
+    const packFolder = await handle.getFolder("resourcepacks");
+    return await packFolder.doesFileExist(this.fileName);
+  }
+  async installPack(handle) {
+    console.log(`${new Date().toISOString()}: getting folder resourcepacks`);
+    const packFolder = await handle.getFolder("resourcepacks");
+    console.log(`${new Date().toISOString()}: downloading file ${this.fileName}`);
+    await packFolder.downloadToFile(this.fileName, this.fileURL);
+  }
+  async removePack(handle) {
+    console.log(`${new Date().toISOString()}: getting folder resourcepacks`);
+    const packFolder = await handle.getFolder("resourcepacks");
+    console.log(`${new Date().toISOString()}: deleting file ${this.fileName}`);
+    await packFolder.deleteFile(this.fileName);
+  }
 }
 export class Mod {
   constructor(data) {
@@ -90,16 +106,16 @@ export class Bundle {
       }))
     );
   }
-  async removeMod(handle, mod) {
-    console.log(`${new Date().toISOString()}: getting folder mods`);
-    const modFolder = await handle.getFolder("mods");
-    console.log(`${new Date().toISOString()}: deleting mod ${mod.name}`);
-    await modFolder.deleteFile(mod.file);
-  }
   async installMod(handle, mod) {
     console.log(`${new Date().toISOString()}: getting folder mods`);
     const modFolder = await handle.getFolder("mods");
     console.log(`${new Date().toISOString()}: downloading mod ${mod.name}`);
     await modFolder.downloadToFile(mod.file, mod.url);
+  }
+  async removeMod(handle, mod) {
+    console.log(`${new Date().toISOString()}: getting folder mods`);
+    const modFolder = await handle.getFolder("mods");
+    console.log(`${new Date().toISOString()}: deleting mod ${mod.name}`);
+    await modFolder.deleteFile(mod.file);
   }
 }

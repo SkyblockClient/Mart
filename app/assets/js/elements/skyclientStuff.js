@@ -1,7 +1,13 @@
 ///<reference path="../api/base.js" />
 
-import { Bundle, Mod } from "../api/optionStructures.js";
-import { optionArea, renderBundle, renderChooser, renderMod } from "./skyclientRender.js";
+import { Bundle, Mod, Pack } from "../api/optionStructures.js";
+import {
+  optionArea,
+  renderBundle,
+  renderChooser,
+  renderMod,
+  renderPack,
+} from "./skyclientRender.js";
 
 const packsNetwork = fetch(
   "https://raw.githubusercontent.com/nacrt/SkyblockClient-REPO/main/files/packs.json"
@@ -35,18 +41,28 @@ class SkyclientStuff extends HTMLElement {
     const optionArea = this.querySelector("#optionArea");
     await window.chosenGameRoot.getFolder("mods", true);
     const optionTags = await Promise.all(
-      window.mods.map(async (modData) => {
-        if (modData.hidden) return;
-        if (modData.packages) {
-          const bundle = new Bundle(modData, window.mods);
-          if (bundle.category != this.category) return;
-          return await renderBundle(bundle);
-        } else {
-          const mod = new Mod(modData);
-          if (mod.category != this.category) return;
-          return await renderMod(mod);
-        }
-      })
+      window.mods
+        .map(async (modData) => {
+          if (modData.hidden) return;
+          if (modData.packages) {
+            const bundle = new Bundle(modData, window.mods);
+            if (bundle.category != this.category) return;
+            return await renderBundle(bundle);
+          } else {
+            const mod = new Mod(modData);
+            if (mod.category != this.category) return;
+            return await renderMod(mod);
+          }
+        })
+        .concat(
+          window.packs.map(async (packData) => {
+            const pack = new Pack(packData);
+            if (pack.category != this.category) return;
+            const tag = await renderPack(pack);
+            console.log(tag);
+            return tag;
+          })
+        )
     );
     optionTags.forEach((tag) => {
       if (tag) optionArea.appendChild(tag);

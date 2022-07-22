@@ -51,13 +51,6 @@ const downloadFile = async (url, path, onCors) => {
   } catch (e) {
     console.debug(`downloadFile (global): using proxy`);
     onCors();
-    console.log(
-      "https://Cloudclient-Proxy.ktibow.repl.co/mod?" +
-        new URLSearchParams({
-          file: path.split("/").at(-1),
-          url: url.split("//").at(-1),
-        }).toString()
-    );
     response = await fetch(
       "https://Cloudclient-Proxy.ktibow.repl.co/mod?" +
         new URLSearchParams({

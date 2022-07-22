@@ -26,7 +26,6 @@ export const optionArea = html`
   ></div>
 `;
 export const renderMod = async (mod, installed) => {
-  console.log(`${new Date().toISOString()}: rendering mod ${mod.name}`);
   const modTag = html`
     <div class="bg-neutral-800 inline-block relative w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1.5rem)] rounded-md cursor-pointer p-2">
       <p class="text-3xl font-bold"><span class="mti"></span>${mod.name}</h3>
@@ -57,7 +56,6 @@ export const renderMod = async (mod, installed) => {
       modTag.replaceWith(await renderMod(mod, true));
     }
   });
-  console.log(`${new Date().toISOString()}: rendered mod ${mod.name}`);
   return modTag;
 };
 export const renderBundle = async (bundle) => {
@@ -137,4 +135,52 @@ export const renderBundle = async (bundle) => {
     });
   }
   return bundleTag;
+};
+export const renderPack = async (pack, installed) => {
+  const packTag = html`
+    <div
+      class="bg-neutral-800 bg-cover inline-block relative w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1.5rem)] rounded-md cursor-pointer p-2"
+    >
+      <p class="text-3xl font-bold"><span class="mti"></span>${pack.name}</h3>
+      <p>${pack.description}</p>
+      <br />
+      <p class="text-sm absolute bottom-2">By <img src="${pack.authorIcon}" class="inline-block w-4 h-4"/> ${pack.author}</p>
+    </div>
+  `;
+  if (pack.screenshot) {
+    packTag.style.backgroundImage = `url(${encodeURI(pack.screenshot)
+      .replace(/\(/g, "%28")
+      .replace(/\)/g, "%29")})`;
+  }
+  const isSelected = installed ?? (await pack.isPackInstalled(window.chosenGameRoot));
+  if (window.dlLocks.includes(pack.fileName)) {
+    packTag.querySelector("span").innerText = "downloading";
+  }
+  if (isSelected) {
+    if (pack.screenshot) {
+      packTag.style.backgroundBlendMode = "overlay";
+      packTag.style.backgroundColor = "rgba(6, 95, 70, 0.9)";
+    } else {
+      packTag.classList.replace("bg-neutral-800", "bg-emerald-800");
+    }
+    packTag.querySelector("span").innerText = "check";
+  } else if (pack.screenshot) {
+    packTag.style.backgroundBlendMode = "darken";
+    packTag.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+  }
+  packTag.addEventListener("click", async () => {
+    if (isSelected) {
+      console.log(`${new Date().toISOString()}: uninstalling pack ${pack.name}`);
+      await pack.removePack(window.chosenGameRoot);
+      console.log(`${new Date().toISOString()}: uninstalled pack ${pack.name}`);
+      packTag.replaceWith(await renderPack(pack, false));
+    } else {
+      console.log(`${new Date().toISOString()}: installing pack ${pack.name}`);
+      packTag.querySelector("span").innerText = "downloading";
+      await pack.installPack(window.chosenGameRoot);
+      console.log(`${new Date().toISOString()}: installed pack ${pack.name}`);
+      packTag.replaceWith(await renderPack(pack, true));
+    }
+  });
+  return packTag;
 };
