@@ -88,8 +88,8 @@ class FolderInfo extends HTMLElement {
       this.genCard(
         "warning",
         "You don't have a Skyclient installation",
-        "You don't have a Skyclient installation. You'll need one to play Skyclient." +
-          `<button class="bg-emerald-600 text-white p-2 rounded-md">Click here to make one</button>`,
+        "You don't have a Skyclient installation. You'll need one to play Skyclient. If you already have one we didn't see, you can still use it." +
+          `<button class="bg-emerald-600 hover:bg-emerald-800 transition-all text-white p-2 rounded-md">Click here to make one</button>`,
         "no-skyclient"
       );
       this.querySelector("#no-skyclient button").addEventListener("click", async () => {
@@ -101,7 +101,7 @@ class FolderInfo extends HTMLElement {
         "Your Skyclient folder was already set up.",
         "We found an existing Skyclient folder, so we won't create a new one. " +
           "If you want to start from scratch, " +
-          `<button class="bg-emerald-600 hover:bg-emerald-800 text-white p-2 rounded-md">click here to reset Skyclient</button>.`,
+          `<button class="bg-emerald-600 hover:bg-emerald-800 transition-all text-white p-2 rounded-md">click here to reset Skyclient</button>.`,
         "already-set-up"
       );
       this.querySelector("#already-set-up button").addEventListener("click", async () => {

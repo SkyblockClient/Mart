@@ -28,13 +28,12 @@ export const optionArea = html`
 export const renderMod = async (mod, installed) => {
   const modTag = html`
     <div
-      class="bg-neutral-800 inline-block relative w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1.5rem)] rounded-md cursor-pointer p-2"
+      class="bg-neutral-800 flex flex-col relative w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1.5rem)] rounded-md cursor-pointer p-2"
       id="mod-${mod.id}"
     >
       <p class="text-3xl font-bold"><span class="mti"></span>${mod.name}</h3>
       <p>${mod.description}</p>
-      <br />
-      <p class="text-sm absolute bottom-2">By <img src="${mod.authorIcon}" class="inline-block w-4 h-4"/> ${mod.author}</p>
+      <p class="text-sm mt-auto">By <img src="${mod.authorIcon}" class="inline-block w-4 h-4"/> ${mod.author}</p>
     </div>
   `;
   const isSelected = installed ?? (await mod.isModInstalled(window.chosenGameRoot));
@@ -145,12 +144,11 @@ export const renderBundle = async (bundle) => {
 export const renderPack = async (pack, installed) => {
   const packTag = html`
     <div
-      class="bg-neutral-800 bg-cover inline-block relative w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1.5rem)] rounded-md cursor-pointer p-2"
+      class="bg-neutral-800 bg-cover flex flex-col relative w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1.5rem)] rounded-md cursor-pointer p-2"
     >
       <p class="text-3xl font-bold"><span class="mti"></span>${pack.name}</h3>
       <p>${pack.description}</p>
-      <br />
-      <p class="text-sm absolute bottom-2">By <img src="${pack.authorIcon}" class="inline-block w-4 h-4"/> ${pack.author}</p>
+      <p class="text-sm mt-auto">By <img src="${pack.authorIcon}" class="inline-block w-4 h-4"/> ${pack.author}</p>
     </div>
   `;
   if (pack.screenshot) {
