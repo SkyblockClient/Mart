@@ -66,8 +66,8 @@ export const renderFolderChooserWeb = async (elem) => {
         Use Chrome, or download Mart as an app.
       </div>
     `;
-    elem.appendChild(warn);
+    elem.append(warn);
   } else {
-    elem.appendChild(dropArea);
+    elem.append(dropArea);
   }
 };

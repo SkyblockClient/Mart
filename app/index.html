@@ -30,7 +30,7 @@
       </a>
     </p>
     <dialog
-      class="fixed left-0 right-0 top-0 bottom-0 w-full h-full z-10 bg-neutral-900 text-white text-center lg:text-2xl"
+      class="fixed left-0 right-0 top-0 bottom-0 w-full h-full z-10 bg-neutral-800/70 backdrop-blur-md text-white text-center lg:text-2xl"
     >
       Welcome to
       <br />
@@ -44,10 +44,18 @@
       </h1>
       <br />
       A next-gen installer for Skyclient
-      <button id="shut" class="block mx-auto bg-emerald-600 p-2 m-4 lg:p-4 rounded-md">Shut</button>
+      <button
+        id="shut"
+        class="block mx-auto bg-emerald-600 hover:bg-emerald-800 transition-all p-2 m-4 lg:p-4 rounded-md"
+      >
+        Shut
+      </button>
     </dialog>
     <main class="max-w-prose mx-auto"></main>
-    <button id="next" class="w-[65ch] block mx-auto my-4 p-2 bg-emerald-600 rounded-md">
+    <button
+      id="next"
+      class="w-[65ch] block mx-auto my-4 p-2 bg-emerald-600 hover:bg-emerald-800 transition-all rounded-md"
+    >
       <span class="font-bold">
         <span class="mti">arrow_forward</span>
         Next
@@ -56,5 +64,17 @@
     <script src="assets/js/api/neutralino.js"></script>
     <script src="assets/js/api/base.js"></script>
     <script type="module" src="assets/js/nav.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
+    <script>
+      tippy.delegate("html", {
+        target: "[title]",
+        content(reference) {
+          const title = reference.getAttribute("title");
+          reference.removeAttribute("title");
+          return title;
+        },
+      });
+    </script>
   </body>
 </html>

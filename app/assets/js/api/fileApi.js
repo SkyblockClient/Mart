@@ -128,12 +128,12 @@ export class AnchorWeb {
     const resp = await downloadFile(url, path, onCors);
     console.log(`${new Date().toISOString()}: got data`);
     if (!resp) return;
+    await modCache.put(url, resp.clone());
+    console.log(`${new Date().toISOString()}: cached`);
     const handle = await this.handle.getFileHandle(path, { create: true });
     const writable = await handle.createWritable();
     await resp.body.pipeTo(writable);
     console.log(`${new Date().toISOString()}: written`);
-    await modCache.put(url, resp.clone());
-    console.log(`${new Date().toISOString()}: cached`);
   }
   async writeFile(path, text) {
     console.debug(`writeFile (AnchorWeb): writing ${path}`);
@@ -205,7 +205,7 @@ export class AnchorApp {
       console.groupEnd();
       return newAnchor;
     }
-    console.debug(`getFolder (AnchorApp): the folder doesn't exist`);
+    console.debug(`getFolder (AnchorApp): ${path} folder doesn't exist`);
     console.groupEnd();
     throw new Error("Folder doesn't exist");
   }

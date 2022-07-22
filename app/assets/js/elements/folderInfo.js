@@ -60,7 +60,7 @@ class FolderInfo extends HTMLElement {
     console.groupEnd();
   }
   genCard(icon, title, content, id) {
-    this.appendChild(html`
+    this.append(html`
       <div class="bg-neutral-800 rounded-md my-4 p-4" id="${id}">
         <span class="mti text-6xl float-left mr-4">${icon}</span>
         <h3 class="text-2xl">${title}</h3>
@@ -96,7 +96,7 @@ class FolderInfo extends HTMLElement {
         "Your Skyclient folder was already set up.",
         "We found an existing Skyclient folder, so we won't create a new one. " +
           "If you want to start from scratch, " +
-          `<button class="bg-emerald-600 text-white p-2 rounded-md">click here to reset Skyclient</button>.`,
+          `<button class="bg-emerald-600 hover:bg-emerald-800 text-white p-2 rounded-md">click here to reset Skyclient</button>.`,
         "already-set-up"
       );
       this.querySelector("#already-set-up button").addEventListener("click", async () => {

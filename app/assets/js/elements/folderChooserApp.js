@@ -20,13 +20,15 @@ export const renderFolderChooserApp = async (elem) => {
         </label>
       </li>
     `;
-    options.appendChild(option);
+    options.append(option);
   }
   const customOption = html`
     <li>
       <input type="radio" name="folder" value="" />
       <span class="text-gray-200"></span>
-      <button class="bg-emerald-600 text-white p-2 rounded-md">Choose another folder</button>
+      <button class="bg-emerald-600 hover:bg-emerald-800 transition-all text-white p-2 rounded-md">
+        Choose another folder
+      </button>
     </li>
   `;
   const previousPath = await susStorage.chosenPath;
@@ -42,12 +44,12 @@ export const renderFolderChooserApp = async (elem) => {
       customOption.querySelector("span").textContent = folder;
     }
   });
-  options.appendChild(customOption);
+  options.append(customOption);
   options.firstChild.querySelector("input").checked = true;
   elem.innerHTML =
     "Your .minecraft folder is where everything is stored. " +
     (detectedFolder ? "Mart found it for you.<br>" : "") +
     "Choose the .minecraft folder that you want to install Skyclient to.<br>" +
     "(If you're using MultiMC/PolyMC, make a new 1.8.9 Forge instance.)";
-  elem.appendChild(options);
+  elem.append(options);
 };

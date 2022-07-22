@@ -1,12 +1,12 @@
 ///<reference path="../api/base.js" />
 export const renderChooser = (clickAction, defaultSelected) => {
   const chooser = html`
-    <div class="rounded-md border-2 border-emerald-600 flex flex-row mt-2"></div>
+    <div class="rounded-md border-2 border-emerald-600 inline-flex flex-grow flex-row mr-2"></div>
   `;
   for (let category of ["Skyblock", "PvP", "Other"]) {
     const optionTag = html`
       <div
-        class="hover:bg-emerald-900 bg-opacity-50 cursor-pointer
+        class="hover:bg-emerald-800 bg-opacity-50 cursor-pointer transition-all
         border-2 border-emerald-600 justify-center p-2 flex flex-1"
         data-category="${category}"
       >
@@ -14,20 +14,23 @@ export const renderChooser = (clickAction, defaultSelected) => {
       </div>
     `;
     optionTag.addEventListener("click", clickAction.bind(null, category, chooser));
-    chooser.appendChild(optionTag);
+    chooser.append(optionTag);
   }
   clickAction(defaultSelected, chooser);
   return chooser;
 };
 export const optionArea = html`
   <div
-    class="absolute left-0 right-0 justify-center flex flex-row flex-wrap gap-4 mt-2"
+    class="absolute left-0 right-0 justify-center flex flex-row flex-wrap gap-4 mt-4"
     id="optionArea"
   ></div>
 `;
 export const renderMod = async (mod, installed) => {
   const modTag = html`
-    <div class="bg-neutral-800 inline-block relative w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1.5rem)] rounded-md cursor-pointer p-2">
+    <div
+      class="bg-neutral-800 inline-block relative w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1.5rem)] rounded-md cursor-pointer p-2"
+      id="mod-${mod.id}"
+    >
       <p class="text-3xl font-bold"><span class="mti"></span>${mod.name}</h3>
       <p>${mod.description}</p>
       <br />
@@ -61,7 +64,10 @@ export const renderMod = async (mod, installed) => {
 export const renderBundle = async (bundle) => {
   const mods = await bundle.installedMods(window.chosenGameRoot);
   const bundleTag = html`
-    <div class="bg-neutral-800 flex flex-col w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1.5rem)] rounded-md cursor-pointer p-2">
+    <div
+      class="bg-neutral-800 flex flex-col w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1.5rem)] rounded-md cursor-pointer p-2"
+      id="bundle-${bundle.id}"
+    >
       <p class="text-3xl font-bold"><span class="mti"></span>${bundle.name}</h3>
       <p><img src="${bundle.icon}" class="inline-block w-4 h-4"/> ${bundle.description}</p>
       <div class="border-teal-500 border-4 p-2 rounded-md mt-auto cursor-default">
@@ -72,7 +78,7 @@ export const renderBundle = async (bundle) => {
         ${mods
           .map(
             (mod) => `
-              <li title="${mod.desc}">
+              <li title="${mod.desc}" data-tippy-placement="right" class="table">
                 <input type="checkbox" id="bundle-${mod.id}" ${
               mod.installed ? "checked" : ""
             } class="cursor-pointer" />
