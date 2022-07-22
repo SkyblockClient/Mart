@@ -69,12 +69,19 @@ class SkyclientStuff extends HTMLElement {
           <span class="font-bold">Installing default mods...</span>
           <h2 class="text-3xl">
             <span id="progress">0</span>
+            /
+            <span id="total">0</span>
             mods installed
           </h2>
+          <p>Waiting on</p>
+          <ul class="mt-4"></ul>
         </dialog>
       `;
       document.body.append(dialog);
       dialog.showModal();
+      const progressElem = dialog.querySelector("#progress");
+      const totalElem = dialog.querySelector("#total");
+      const listElem = dialog.querySelector("ul");
       await Promise.all(
         window.mods.map(async (modData) => {
           if (modData.hidden) return;
@@ -83,18 +90,42 @@ class SkyclientStuff extends HTMLElement {
             if (!bundle.enabledByDefault) return;
             await Promise.all(
               bundle.packages.map(async (mod) => {
-                await bundle.installMod(window.chosenGameRoot, mod);
-                dialog.querySelector("#progress").innerText =
-                  parseInt(dialog.querySelector("#progress").innerText) + 1;
-                this.querySelector(`#bundle-${bundle.id}`).replaceWith(await renderBundle(bundle));
+                totalElem.innerText = parseInt(totalElem.innerText) + 1;
+                listElem.append(
+                  html`
+                    <li id="mod-${mod.id}">${mod.name}</li>
+                  `
+                );
+                try {
+                  await bundle.installMod(window.chosenGameRoot, mod);
+                } catch (e) {
+                  console.error(mod, "failed", e);
+                  listElem.querySelector(`#mod-${mod.id}`).innerText = `${mod.name} failed`;
+                  return;
+                }
+                progressElem.innerText = parseInt(progressElem.innerText) + 1;
+                listElem.querySelector(`#mod-${mod.id}`).remove();
               })
             );
+            this.querySelector(`#bundle-${bundle.id}`).replaceWith(await renderBundle(bundle));
           } else {
             const mod = new Mod(modData);
             if (!mod.enabledByDefault) return;
-            await mod.installMod(window.chosenGameRoot);
-            dialog.querySelector("#progress").innerText =
-              parseInt(dialog.querySelector("#progress").innerText) + 1;
+            totalElem.innerText = parseInt(totalElem.innerText) + 1;
+            listElem.append(
+              html`
+                <li id="mod-${mod.id}">${mod.name}</li>
+              `
+            );
+            try {
+              await mod.installMod(window.chosenGameRoot);
+            } catch (e) {
+              console.error(mod, "failed", e);
+              listElem.querySelector(`#mod-${mod.id}`).innerText = `${mod.name} failed`;
+              return;
+            }
+            progressElem.innerText = parseInt(progressElem.innerText) + 1;
+            listElem.querySelector(`#mod-${mod.id}`).remove();
             this.querySelector(`#mod-${mod.id}`).replaceWith(await renderMod(mod));
           }
         })

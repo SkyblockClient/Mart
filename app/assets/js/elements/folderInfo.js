@@ -29,7 +29,7 @@ class FolderInfo extends HTMLElement {
         "forge-1.8.9-11.15.1.2318-1.8.9.jar",
         "https://raw.githubusercontent.com/nacrt/SkyblockClient-REPO/main/files/forge/forge-1.8.9-11.15.1.2318-1.8.9.jar"
       );
-      existingProfiles.profiles["skyclientskyclientbutuuidformart"] = {
+      existingProfiles.profiles["skyclient"] = {
         created: new Date().toISOString(),
         gameDir: "./skyclient",
         icon: "Furnace_On",
@@ -79,7 +79,12 @@ class FolderInfo extends HTMLElement {
     const existingProfiles =
       hasVanillaProfiles && JSON.parse(await window.chosen.readFile("launcher_profiles.json"));
     const hasSkyclientFolder = await window.chosen.doesFolderExist("skyclient");
-    if (hasVanillaProfiles && !existingProfiles?.profiles?.skyclientskyclientbutuuidformart) {
+    if (
+      hasVanillaProfiles &&
+      !["SkyClient", "skyclientskyclientskyclientskycl", "skyclientskyclientbutuuidformart"].some(
+        (p) => existingProfiles?.profiles[p]
+      )
+    ) {
       this.genCard(
         "warning",
         "You don't have a Skyclient installation",
@@ -127,7 +132,7 @@ const prepareForSkyclientPane = async () => {
     : window.chosen;
   el("main").innerHTML = `
     <h1 class="text-3xl">3. Choose what you want in Skyclient</h1>
-    <p class="mt-2">Click on a mod/pack to add/remove it.</p>
+    <p class="mt-2">Click on a mod/pack to add/remove it. It'll add/remove it as soon as you click on it, there's no install button.</p>
     <skyclient-stuff class="mt-2"></skyclient-stuff>
   `;
   el("#next").remove();
