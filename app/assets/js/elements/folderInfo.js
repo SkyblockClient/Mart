@@ -81,14 +81,18 @@ class FolderInfo extends HTMLElement {
     const hasSkyclientFolder = await window.chosen.doesFolderExist("skyclient");
     if (
       hasVanillaProfiles &&
-      !["SkyClient", "skyclientskyclientskyclientskycl", "skyclientskyclientbutuuidformart"].some(
-        (p) => existingProfiles?.profiles[p]
-      )
+      ![
+        "SkyClient",
+        "skyclient",
+        "skyclientskyclientskyclientskycl",
+        "skyclientskyclientbutuuidformart",
+      ].some((p) => existingProfiles?.profiles[p])
     ) {
+      console.log(existingProfiles.profiles);
       this.genCard(
         "warning",
         "You don't have a Skyclient installation",
-        "You don't have a Skyclient installation. You'll need one to play Skyclient. If you already have one we didn't see, you can still use it." +
+        "You don't have a Skyclient installation. You'll need one to play Skyclient. If you already have one we didn't see, you can still use it. " +
           `<button class="bg-emerald-600 hover:bg-emerald-800 transition-all text-white p-2 rounded-md">Click here to make one</button>`,
         "no-skyclient"
       );

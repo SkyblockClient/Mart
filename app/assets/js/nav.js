@@ -11,10 +11,10 @@ ${url}:${line}`);
 el("#next").addEventListener("click", () => window.nextStep());
 const splashDisplayed = await susStorage.splashDisplayed;
 if (!splashDisplayed) {
-  el("dialog").showModal();
+  el("#welcome").showModal();
   document.querySelector("#shut").addEventListener("click", () => {
     susStorage.splashDisplayed = true;
-    el("dialog").close();
+    el("#welcome").close();
   });
 }
 

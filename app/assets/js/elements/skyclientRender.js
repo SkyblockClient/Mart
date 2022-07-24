@@ -28,7 +28,7 @@ export const optionArea = html`
 export const renderMod = async (mod, installed) => {
   const modTag = html`
     <div
-      class="bg-neutral-800 flex flex-col relative w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1.5rem)] rounded-md cursor-pointer p-2"
+      class="bg-neutral-800 flex flex-col relative w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1.5rem)] 2xl:w-[calc(20vw_-_1rem)] rounded-md cursor-pointer p-2"
       id="mod-${mod.id}"
     >
       <p class="text-3xl font-bold"><span class="mti"></span>${mod.name}</h3>
@@ -64,7 +64,7 @@ export const renderBundle = async (bundle) => {
   const mods = await bundle.installedMods(window.chosenGameRoot);
   const bundleTag = html`
     <div
-      class="bg-neutral-800 flex flex-col w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1.5rem)] rounded-md cursor-pointer p-2"
+      class="bg-neutral-800 flex flex-col w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1.5rem)] 2xl:w-[calc(20vw_-_1rem)] rounded-md cursor-pointer p-2"
       id="bundle-${bundle.id}"
     >
       <p class="text-3xl font-bold"><span class="mti"></span>${bundle.name}</h3>
@@ -144,7 +144,7 @@ export const renderBundle = async (bundle) => {
 export const renderPack = async (pack, installed) => {
   const packTag = html`
     <div
-      class="bg-neutral-800 bg-cover flex flex-col relative w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1.5rem)] rounded-md cursor-pointer p-2"
+      class="bg-neutral-800 bg-cover flex flex-col relative w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1rem)] rounded-md cursor-pointer p-2"
     >
       <p class="text-3xl font-bold"><span class="mti"></span>${pack.name}</h3>
       <p>${pack.description}</p>
