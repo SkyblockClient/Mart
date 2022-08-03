@@ -31,7 +31,7 @@ class SkyclientStuff extends HTMLElement {
           <h2 class="text-3xl lg:text-6xl">You don't have any mods yet.</h2>
           <p>
             SkyClient has some default mods. They improve your FPS, add features, keep your mods
-            updated, and more.
+            updated, and more. You can still add or remove mods once you have the defaults.
           </p>
           <button
             class="block mx-auto bg-emerald-600 hover:bg-emerald-800 transition-all p-2 m-4 rounded-md"
@@ -42,7 +42,7 @@ class SkyclientStuff extends HTMLElement {
             class="block mx-auto bg-neutral-600 hover:bg-neutral-800 transition-all p-2 m-4 rounded-md"
             onclick="this.parentElement.close()"
           >
-            I'll make my own modpack, and I know exactly what I'm doing.
+            I'll choose my own and I know what each mod does
           </button>
         </dialog>
       `;
