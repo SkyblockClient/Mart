@@ -147,6 +147,7 @@ class SkyclientStuff extends HTMLElement {
           window.packs.map(async (packData) => {
             const pack = new Pack(packData);
             if (pack.category != this.category) return;
+            if (pack.hidden) return;
             return await renderPack(pack);
           })
         )
