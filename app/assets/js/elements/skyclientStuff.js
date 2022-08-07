@@ -30,8 +30,8 @@ class SkyclientStuff extends HTMLElement {
         >
           <h2 class="text-3xl lg:text-6xl">You don't have any mods yet.</h2>
           <p>
-            Skyclient has some default mods. They improve your FPS, add features, keep your mods
-            updated, and more.
+            SkyClient has some default mods. They improve your FPS, add features, keep your mods
+            updated, and more. You can still add or remove mods once you have the defaults.
           </p>
           <button
             class="block mx-auto bg-emerald-600 hover:bg-emerald-800 transition-all p-2 m-4 rounded-md"
@@ -42,7 +42,7 @@ class SkyclientStuff extends HTMLElement {
             class="block mx-auto bg-neutral-600 hover:bg-neutral-800 transition-all p-2 m-4 rounded-md"
             onclick="this.parentElement.close()"
           >
-            no thanks i am dum
+            I'll choose my own and I know what each mod does
           </button>
         </dialog>
       `;
@@ -95,7 +95,7 @@ class SkyclientStuff extends HTMLElement {
     chooser.querySelector("#removeAll").addEventListener("click", async () => {
       if (
         !confirm(
-          "Are you sure you want to delete all your mods? We won't delete their config, but we won't remember which ones you had."
+          "Are you sure you want to delete all your mods? We won't delete their config, but we also won't remember which ones you had."
         )
       )
         return;

@@ -8,8 +8,8 @@ class FolderInfo extends HTMLElement {
     console.group("setting up profile");
     this.genCard(
       "sync",
-      "Setting up your Skyclient profile...",
-      "Mart is downloading Forge and making a Skyclient installation profile for you.",
+      "Setting up your SkyClient profile...",
+      "Mart is downloading Forge and making a SkyClient installation profile for you.",
       "setting-up"
     );
     try {
@@ -44,15 +44,15 @@ class FolderInfo extends HTMLElement {
       await window.chosen.getFolder("skyclient", true);
       this.genCard(
         "check",
-        "Your Skyclient profile was successfully set up!",
-        "Everything *should* be in place for you to launch Skyclient (other than the mods)!"
+        "Your SkyClient profile was successfully set up!",
+        "Everything *should* be in place for you to launch SkyClient (other than the mods)!"
       );
     } catch (e) {
       console.error(e);
       this.genCard(
         "warning",
-        "Something went wrong setting up your Skyclient profile",
-        "An error happened while setting up your Skyclient profile. DM KTibow#3960 about this. " +
+        "Something went wrong setting up your SkyClient profile",
+        "An error happened while setting up your SkyClient profile. DM KTibow#3960 about this. " +
           "Anyway, you'll need to make a new installation manually."
       );
     }
@@ -91,8 +91,8 @@ class FolderInfo extends HTMLElement {
       console.log(existingProfiles.profiles);
       this.genCard(
         "warning",
-        "You don't have a Skyclient installation",
-        "You don't have a Skyclient installation. You'll need one to play Skyclient. If you already have one we didn't see, you can still use it. " +
+        "You don't have a SkyClient installation",
+        "You don't have a SkyClient installation. You'll need one to play SkyClient. If you already have one we didn't see, you can still use it. " +
           `<button class="bg-emerald-600 hover:bg-emerald-800 transition-all text-white p-2 rounded-md">Click here to make one</button>`,
         "no-skyclient"
       );
@@ -102,10 +102,10 @@ class FolderInfo extends HTMLElement {
     } else if (hasSkyclientFolder) {
       this.genCard(
         "check",
-        "Your Skyclient folder was already set up.",
-        "We found an existing Skyclient folder, so we won't create a new one. " +
+        "Your SkyClient folder was already set up.",
+        "We found an existing SkyClient folder, so we won't create a new one. " +
           "If you want to start from scratch, " +
-          `<button class="bg-emerald-600 hover:bg-emerald-800 transition-all text-white p-2 rounded-md">click here to reset Skyclient</button>.`,
+          `<button class="bg-emerald-600 hover:bg-emerald-800 transition-all text-white p-2 rounded-md">click here to reset SkyClient</button>.`,
         "already-set-up"
       );
       this.querySelector("#already-set-up button").addEventListener("click", async () => {
@@ -135,7 +135,7 @@ const prepareForSkyclientPane = async () => {
     ? await window.chosen.getFolder("skyclient")
     : window.chosen;
   el("main").innerHTML = `
-    <h1 class="text-3xl">3. Choose what you want in Skyclient</h1>
+    <h1 class="text-3xl">3. Choose what mods and packs you want in SkyClient</h1>
     <p class="mt-2">Click on a mod/pack to add/remove it. It'll add/remove it as soon as you click on it, there's no install button.</p>
     <skyclient-stuff class="mt-2"></skyclient-stuff>
   `;

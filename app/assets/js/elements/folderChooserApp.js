@@ -49,7 +49,7 @@ export const renderFolderChooserApp = async (elem) => {
   elem.innerHTML =
     "Your .minecraft folder is where everything is stored. " +
     (detectedFolder ? "Mart found it for you.<br>" : "") +
-    "Choose the .minecraft folder that you want to install Skyclient to.<br>" +
+    "Choose the .minecraft folder that you want to install SkyClient to.<br>" +
     "(If you're using MultiMC/PolyMC, make a new 1.8.9 Forge instance.)";
   elem.append(options);
 };

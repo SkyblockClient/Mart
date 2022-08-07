@@ -63,7 +63,7 @@ export const renderFolderChooserWeb = async (elem) => {
         <code class="font-mono">showDirectoryPicker</code>
         API.
         <br />
-        Use Chrome, or download Mart as an app.
+        Use Chrome, Edge, or download Mart as an app.
       </div>
     `;
     elem.append(warn);
