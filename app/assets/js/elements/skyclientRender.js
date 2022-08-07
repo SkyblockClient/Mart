@@ -144,7 +144,7 @@ export const renderBundle = async (bundle) => {
 export const renderPack = async (pack, installed) => {
   const packTag = html`
     <div
-      class="bg-neutral-800 bg-cover flex flex-col relative w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1rem)] rounded-md cursor-pointer p-2"
+      class="bg-neutral-800 bg-cover bg-center flex flex-col relative w-[calc(50vw_-_2rem)] lg:w-[calc(25vw_-_1rem)] rounded-md cursor-pointer p-2"
     >
       <p class="text-3xl font-bold"><span class="mti"></span>${pack.name}</h3>
       <p>${pack.description}</p>
