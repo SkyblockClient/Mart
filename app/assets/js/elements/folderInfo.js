@@ -99,17 +99,28 @@ class FolderInfo extends HTMLElement {
       this.querySelector("#no-skyclient button").addEventListener("click", async () => {
         await this.setupProfile(existingProfiles);
       });
-    } else if (hasSkyclientFolder) {
+    } else if (hasSkyclientFolder || hasVanillaProfiles) {
+      const whatIsSetup =
+        hasSkyclientFolder && hasVanillaProfiles
+          ? "folder and installation"
+          : hasSkyclientFolder
+          ? "folder"
+          : "installation";
       this.genCard(
         "check",
-        "Your SkyClient folder was already set up.",
-        "We found an existing SkyClient folder, so we won't create a new one. " +
-          "If you want to start from scratch, " +
-          `<button class="bg-emerald-600 hover:bg-emerald-800 transition-all text-white p-2 rounded-md">click here to reset SkyClient</button>.`,
+        `Your SkyClient ${whatIsSetup} was/were already set up.`,
+        `We found an existing SkyClient ${whatIsSetup}, so we won't create a new one. ` +
+          hasSkyclientFolder
+          ? ""
+          : "You don't have a SkyClient folder though. " +
+              "If you want to start from scratch, " +
+              `<button class="bg-emerald-600 hover:bg-emerald-800 transition-all text-white p-2 rounded-md">click here to reset SkyClient</button>.`,
         "already-set-up"
       );
       this.querySelector("#already-set-up button").addEventListener("click", async () => {
-        await window.chosen.deleteFolder("skyclient");
+        try {
+          await window.chosen.deleteFolder("skyclient");
+        } catch (e) {}
         await this.setupProfile(existingProfiles);
       });
     } else {

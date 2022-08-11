@@ -6,8 +6,9 @@ let recursiveDeleteNL;
 if (IS_NEUTRALINO) {
   console.debug(`initialization (Neutralino global)`);
   Neutralino.init();
-  SEPARATOR = NL_OS === "Windows" ? "\\" : "/";
-  CACHE_DIR = (await Neutralino.os.getPath("cache")) + SEPARATOR + "MartJul21";
+  const globalCacheDir = await Neutralino.os.getPath("cache");
+  SEPARATOR = globalCacheDir.includes("\\") ? "\\" : "/";
+  CACHE_DIR = globalCacheDir + SEPARATOR + "MartJul21";
   try {
     await Neutralino.filesystem.createDirectory(CACHE_DIR);
   } catch (e) {}

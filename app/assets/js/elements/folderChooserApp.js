@@ -1,15 +1,15 @@
 ///<reference path="../api/base.js" />
-import { doesFileExistNL } from "../api/fileApi.js";
+import { doesFileExistNL, SEPARATOR } from "../api/fileApi.js";
 export const renderFolderChooserApp = async (elem) => {
   const options = html`
     <ul></ul>
   `;
   const vanillaLauncherFolder =
     NL_OS === "Linux"
-      ? (await Neutralino.os.getEnv("HOME")) + "/.minecraft"
+      ? (await Neutralino.os.getEnv("HOME")) + SEPARATOR + ".minecraft"
       : NL_OS === "Windows"
-      ? (await Neutralino.os.getPath("data")) + "\\.minecraft"
-      : (await Neutralino.os.getPath("data")) + "/minecraft";
+      ? (await Neutralino.os.getPath("data")) + SEPARATOR + ".minecraft"
+      : (await Neutralino.os.getPath("data")) + SEPARATOR + "minecraft";
   const detectedFolder = await doesFileExistNL(vanillaLauncherFolder);
   if (detectedFolder) {
     const option = html`
