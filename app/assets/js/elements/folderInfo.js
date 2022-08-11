@@ -110,11 +110,9 @@ class FolderInfo extends HTMLElement {
         "check",
         `Your SkyClient ${whatIsSetup} was/were already set up.`,
         `We found an existing SkyClient ${whatIsSetup}, so we won't create a new one. ` +
-          hasSkyclientFolder
-          ? ""
-          : "You don't have a SkyClient folder though. " +
-              "If you want to start from scratch, " +
-              `<button class="bg-emerald-600 hover:bg-emerald-800 transition-all text-white p-2 rounded-md">click here to reset SkyClient</button>.`,
+          (hasSkyclientFolder ? "" : "You don't have a SkyClient folder though. ") +
+          "If you want to start from scratch, " +
+          `<button class="bg-emerald-600 hover:bg-emerald-800 transition-all text-white p-2 rounded-md">click here to reset SkyClient</button>.`,
         "already-set-up"
       );
       this.querySelector("#already-set-up button").addEventListener("click", async () => {
