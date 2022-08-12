@@ -1,5 +1,7 @@
 ///<reference path="../api/base.js" />
 
+import { SEPARATOR } from "../api/fileApi.js";
+
 class FolderInfo extends HTMLElement {
   constructor() {
     super();
@@ -31,7 +33,7 @@ class FolderInfo extends HTMLElement {
       );
       existingProfiles.profiles["skyclient"] = {
         created: new Date().toISOString(),
-        gameDir: "./skyclient",
+        gameDir: window.chosen.path ? window.chosen.path + SEPARATOR + "skyclient" : "./skyclient",
         icon: "Furnace_On",
         lastUsed: "1970-01-01T00:00:00.000Z",
         lastVersionId: "1.8.9-forge1.8.9-11.15.1.2318-1.8.9",
