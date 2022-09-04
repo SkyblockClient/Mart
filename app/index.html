@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Mart</title>
@@ -8,29 +8,46 @@
     <meta name="og:title" content="Mart" />
     <meta
       name="og:description"
-      content="Mart is a next-gen installer for SkyClient. SkyClient is a collection of mods and other resources for playing Hypixel."
+      content="Mart is a next-gen installer for SkyClient. SkyClient is a program that downloads a collection of mods and other resources for playing Hypixel."
     />
     <meta name="og:image" content="assets/icons/Mart.png" />
-    <meta name="theme-color" content="#059669" />
+    <meta
+      name="description"
+      content="Mart is a next-gen installer for SkyClient. SkyClient is a program that downloads a collection of mods and other resources for playing Hypixel."
+    />
+    <meta name="theme-color" content="#88C0D0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
-  <body class="bg-neutral-900 text-white accent-emerald-600">
+  <body class="bg-nord0 text-white accent-nord8">
     <h1 class="text-5xl text-center my-2">
-      <img src="assets/icons/Mart.png" alt="Mart Logo" class="inline-block h-12 align-top" />
+      <img
+        src="assets/icons/Mart.png"
+        alt="Mart Logo"
+        class="inline-block h-12 align-top"
+        width="48"
+        height="48"
+      />
       Mart
     </h1>
     <p class="text-center text-xl mb-20">
-      <a href="https://inv.wtf/skyclient" class="text-emerald-600 cursor-pointer">
+      <a
+        href="https://inv.wtf/skyclient"
+        class="text-nord8 border-nord8 hover:border-b-2 cursor-pointer"
+      >
         <span class="mti">discord</span>
         Community
       </a>
       -
-      <a onclick="window.location.reload()" class="text-emerald-600 cursor-pointer">
+      <a
+        onclick="window.location.reload()"
+        class="text-nord8 border-nord8 hover:border-b-2 transition-all cursor-pointer"
+      >
         <span class="mti">refresh</span>
         Reload
       </a>
     </p>
     <dialog
-      class="fixed left-0 right-0 top-0 bottom-0 w-full h-full rounded-lg z-10 bg-neutral-800/70 backdrop-blur-md text-white text-center lg:text-2xl"
+      class="fixed left-0 right-0 top-0 bottom-0 w-full h-full rounded-lg z-10 bg-nord1/70 backdrop-blur-md text-white text-center lg:text-2xl"
       id="welcome"
     >
       Welcome to
@@ -47,7 +64,7 @@
       A next-gen installer for SkyClient
       <button
         id="shut"
-        class="block mx-auto bg-emerald-600 hover:bg-emerald-800 transition-all p-2 m-4 lg:p-4 rounded-md"
+        class="block mx-auto bg-nord10 hover:bg-nord10/70 transition-all p-2 m-4 lg:p-4 rounded-md"
       >
         Shut
       </button>
@@ -55,7 +72,7 @@
     <main class="max-w-prose mx-auto"></main>
     <button
       id="next"
-      class="w-[65ch] block mx-auto my-4 p-2 bg-emerald-600 hover:bg-emerald-800 transition-all rounded-md"
+      class="w-[65ch] block mx-auto my-4 p-2 bg-nord10 hover:bg-nord10/70 transition-all rounded-md"
     >
       <span class="font-bold">
         <span class="mti">arrow_forward</span>

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "tailwind-nord": "^1.2.0",
+    "tailwindcss": "^3.1.8"
+  }
+}

@@ -2,7 +2,7 @@
 export const renderFolderChooserWeb = async (elem) => {
   const dropArea = html`
     <div
-      class="text-center mt-4 p-4 rounded-md bg-gradient-to-br from-lime-800 to-emerald-800 group cursor-pointer"
+      class="text-center mt-4 p-4 rounded-md bg-gradient-to-br from-nord9/75 to-nord10/75 group cursor-pointer"
     >
       <span id="drop" class="transition-all duration-500">Drop</span>
       your .minecraft folder here
@@ -24,13 +24,11 @@ export const renderFolderChooserWeb = async (elem) => {
     dropText.classList.remove("font-bold");
   });
   const recognizeFolder = () => {
-    dropArea.classList.remove("from-lime-800");
-    dropArea.classList.remove("to-emerald-800");
-    dropArea.classList.add("from-green-800");
-    dropArea.classList.add("to-sky-800");
+    dropArea.classList.add("hidden");
+    document.querySelector("#next").classList.remove("hidden");
     elem.querySelector(
       "#result"
-    ).innerHTML = `<span class="mti">check</span> You dropped ${window.chosen.name}, now click Next`;
+    ).innerHTML = `<span class="mti">check</span> You dropped ${window.chosen.name}`;
   };
   dropArea.addEventListener("drop", async (e) => {
     e.preventDefault();
@@ -41,33 +39,57 @@ export const renderFolderChooserWeb = async (elem) => {
     recognizeFolder();
   });
   dropArea.addEventListener("click", async () => {
+    if (!elem.querySelector("details")) elem.querySelector("#result").prepend(errorExplanation);
     window.chosen = await window.showDirectoryPicker();
     recognizeFolder();
   });
-  elem.innerHTML = `
-    <div class="bg-neutral-800 rounded-md my-4 p-4">
+  elem.innerHTML = String.raw`
+    <div class="bg-nord1 rounded-md my-4 p-4 flex gap-1">
       <span class="mti">info</span>
-      <div class="inline-block">
-        <b>Try downloading Mart as an app if the web version doesn't work.</b>
-        <br />
-        Also, if you're using MultiMC/PolyMC, make a new 1.8.9 Forge instance first.
+      <div class="inline-block flex-grow">
+        <p class="font-bold">Try downloading Mart as an app if the web version doesn't work.</p>
+        <p>Also, if you're using MultiMC/PolyMC, make a new 1.8.9 Forge instance first.</p>
       </div>
     </div>
     <p id="result"></p>
   `;
+  const errorExplanation = html([
+    String.raw`
+    <details class="group">
+      <summary
+        class="cursor-pointer bg-nord1 p-4 rounded-md text-sm marker:font-['Material_Icons'] marker:content-['expand\\_more'] group-open:marker:content-['expand\\_less']"
+      >
+        <span class="align-top">
+          Error like "can't open this folder because it contains system files"
+        </span>
+      </summary>
+      <p class="mt-4">
+        There are 3 possible solutions. Try them in order.
+      </p>
+      <ul class="list-disc list-inside">
+        <li>Drag your .minecraft folder into Mart instead of clicking to choose it</li>
+        <li>Temporarily drag your .minecraft folder to Documents, use Mart, then drag it back</li>
+        <li>Download Mart as an app</li>
+      </ul>
+    </details>
+  `,
+  ]);
   if (!window.showDirectoryPicker) {
     const warn = html`
-      <div class="bg-red-800 rounded-md mt-4 p-4">
+      <div class="bg-nord11/50 rounded-md mt-4 p-4 flex gap-1">
         <span class="mti">warning</span>
-        Your browser doesn't support the
-        <code class="font-mono">showDirectoryPicker</code>
-        API.
-        <br />
-        Use Chrome, Edge, or download Mart as an app.
+        <div class="inline-block">
+          Your browser doesn't support the
+          <code class="font-mono">showDirectoryPicker</code>
+          API.
+          <br />
+          Use Chrome, Edge, or download Mart as an app.
+        </div>
       </div>
     `;
     elem.append(warn);
   } else {
     elem.append(dropArea);
   }
+  document.querySelector("#next").classList.add("hidden");
 };

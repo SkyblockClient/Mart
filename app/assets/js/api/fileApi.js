@@ -4,7 +4,7 @@ export let doesFileExistNL;
 let CACHE_DIR;
 let recursiveDeleteNL;
 if (IS_NEUTRALINO) {
-  console.debug(`initialization (Neutralino global)`);
+  console.debug("initialization (Neutralino global)");
   Neutralino.init();
   const globalCacheDir = await Neutralino.os.getPath("cache");
   SEPARATOR = globalCacheDir.includes("\\") ? "\\" : "/";
@@ -26,7 +26,6 @@ if (IS_NEUTRALINO) {
     );
     await Promise.all(
       contents.map(async (entry) => {
-        console.log(entry);
         const entryPath = path + SEPARATOR + entry.entry;
         if (entry.type == "FILE") {
           await Neutralino.filesystem.removeFile(entryPath);
@@ -38,7 +37,7 @@ if (IS_NEUTRALINO) {
     await Neutralino.filesystem.removeDirectory(path);
   };
 }
-const downloadFile = async (url, path, onCors) => {
+const downloadFile = async (url, path) => {
   console.log(`${new Date().toISOString()}: downloading file`);
   console.debug(`downloadFile (global): downloading ${url} to ${path}`);
   if (window.dlLocks.includes(path)) {
@@ -50,8 +49,7 @@ const downloadFile = async (url, path, onCors) => {
   try {
     response = await fetch(url, { cache: "force-cache" });
   } catch (e) {
-    console.debug(`downloadFile (global): using proxy`);
-    onCors();
+    console.debug("downloadFile (global): using proxy");
     response = await fetch(
       "https://Cloudclient-Proxy.ktibow.repl.co/mod?" +
         new URLSearchParams({
@@ -66,12 +64,12 @@ const downloadFile = async (url, path, onCors) => {
 };
 export class AnchorWeb {
   constructor(handle) {
-    console.debug(`initialization (AnchorWeb): ${handle}`);
+    console.debug("initialization (AnchorWeb):", handle);
     /** @type {FileSystemDirectoryHandle} */
     this.handle = handle;
   }
   async validate() {
-    console.debug(`validate (AnchorWeb)`);
+    console.debug("validate (AnchorWeb)");
     const folderName = this.handle.name.toLowerCase();
     if (this.handle.kind != "directory") {
       return "You didn't choose a folder. Please choose a folder, not a file.";
@@ -123,19 +121,20 @@ export class AnchorWeb {
     console.debug(`deleteFolder (AnchorWeb): deleting ${path}`);
     await this.handle.removeEntry(path, { recursive: true });
   }
-  async downloadToFile(path, url, onCors = () => {}) {
+  async downloadToFile(path, url) {
     const modCache = await window.caches.open("modcache-jun11-2022");
     console.log(`${new Date().toISOString()}: checking cache`);
-    const cached = await modCache.match(url);
-    if (cached) {
+    let resp = await modCache.match(url);
+    if (!resp) {
+      console.log(`${new Date().toISOString()}: did not find in cache`);
+      resp = await downloadFile(url, path);
+      if (!resp) return;
+      console.log(`${new Date().toISOString()}: got data`);
+      await modCache.put(url, resp.clone());
+      console.log(`${new Date().toISOString()}: cached`);
+    } else {
       console.log(`${new Date().toISOString()}: found in cache`);
-      return cached;
     }
-    const resp = await downloadFile(url, path, onCors);
-    console.log(`${new Date().toISOString()}: got data`);
-    if (!resp) return;
-    await modCache.put(url, resp.clone());
-    console.log(`${new Date().toISOString()}: cached`);
     const handle = await this.handle.getFileHandle(path, { create: true });
     const writable = await handle.createWritable();
     await resp.body.pipeTo(writable);
@@ -156,7 +155,7 @@ export class AnchorApp {
     this.path = path;
   }
   async validate() {
-    console.debug(`validate (AnchorApp)`);
+    console.debug("validate (AnchorApp)");
     const doesPathExist = await doesFileExistNL(this.path);
     const folderName = this.path.split("/").pop().split("\\").pop();
     if (!doesPathExist) {
@@ -190,9 +189,10 @@ export class AnchorApp {
     return await Neutralino.filesystem.readFile(this.path + SEPARATOR + path);
   }
   async getFolder(path, create = false) {
+    // idea: skip checking if it already exists by lazy-creating it
     console.group(`getFolder (AnchorApp): getting ${path} (create: ${create})`);
     if (await this.doesFileExist(path)) {
-      console.debug(`getFolder (AnchorApp): the folder already exists`);
+      console.debug("getFolder (AnchorApp): the folder already exists");
       console.groupEnd();
       return new AnchorApp(this.path + SEPARATOR + path);
     }
@@ -227,16 +227,14 @@ export class AnchorApp {
     await recursiveDeleteNL(this.path + SEPARATOR + path);
     console.groupEnd();
   }
-  async downloadToFile(path, url, onCors = () => {}) {
+  async downloadToFile(path, url) {
     const cacheLoc = CACHE_DIR + SEPARATOR + encodeURIComponent(url);
     try {
-      await Neutralino.filesystem.getStats(cacheLoc);
-      console.log(`${new Date().toISOString()}: found in cache`);
       await Neutralino.filesystem.copyFile(cacheLoc, this.path + SEPARATOR + path);
-      console.log(`${new Date().toISOString()}: written`);
+      console.log(`${new Date().toISOString()}: found in cache, written`);
       return;
     } catch (e) {}
-    const resp = await downloadFile(url, path, onCors);
+    const resp = await downloadFile(url, path);
     if (!resp) return;
     const bytes = await resp.arrayBuffer();
     console.log(`${new Date().toISOString()}: got buffer`);

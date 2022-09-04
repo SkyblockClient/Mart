@@ -1,9 +1,12 @@
 module.exports = {
-  content: ["**/*.{html,js}"],
+  content: ["app/**/*.{html,js}"],
   theme: {
     extend: {
       animation: {
         wipe: "wipe 1s ease-in-out",
+      },
+      colors: {
+        nord10sat: "hsl(213deg 42% 30%)",
       },
       keyframes: {
         wipe: {
@@ -24,5 +27,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwind-nord")],
 };

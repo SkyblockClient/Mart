@@ -1,5 +1,6 @@
 # Developer tools' files
 .lite_workspace.lua
+node_modules
 
 # Neutralinojs binaries and builds
 /bin

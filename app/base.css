@@ -25,16 +25,24 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Renogare Soft", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Ubuntu,
-    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol", "Noto Color Emoji";
-  font-weight: bold;
-  letter-spacing: 0.02em;
+  @apply font-bold tracking-wide text-nord8;
 }
 .mti {
   font-family: "Material Icons";
   vertical-align: top;
 }
+.scale-pixelated {
+  image-rendering: pixelated;
+}
+.scale-unset {
+  image-rendering: unset;
+}
 :root {
   color-scheme: dark;
+}
+.tippy-box {
+  @apply bg-nord2 text-white;
+}
+.tippy-arrow {
+  @apply text-nord2;
 }

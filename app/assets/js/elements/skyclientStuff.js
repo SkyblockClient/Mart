@@ -23,10 +23,11 @@ class SkyclientStuff extends HTMLElement {
   }
   async connectedCallback() {
     this.append(optionArea);
-    if (!(await window.chosenGameRoot.doesFolderExist("mods"))) {
+    const usedSCBefore = this.getAttribute("used-before") == "true";
+    if (!usedSCBefore) {
       const dialog = html`
         <dialog
-          class="fixed left-0 right-0 top-0 bottom-0 w-full h-full rounded-lg z-10 bg-neutral-800/70 backdrop-blur-md text-white text-center lg:text-2xl"
+          class="fixed left-0 right-0 top-0 bottom-0 w-full h-full rounded-lg z-10 bg-nord1/70 backdrop-blur-md text-white text-center lg:text-2xl"
         >
           <h2 class="text-3xl lg:text-6xl">You don't have any mods yet.</h2>
           <p>
@@ -34,12 +35,12 @@ class SkyclientStuff extends HTMLElement {
             updated, and more. You can still add or remove mods once you have the defaults.
           </p>
           <button
-            class="block mx-auto bg-emerald-600 hover:bg-emerald-800 transition-all p-2 m-4 rounded-md"
+            class="block mx-auto bg-nord10 hover:bg-nord10/70 transition-all p-2 lg:p-4 m-4 rounded-md"
           >
             Download default mods
           </button>
           <button
-            class="block mx-auto bg-neutral-600 hover:bg-neutral-800 transition-all p-2 m-4 rounded-md"
+            class="block mx-auto bg-nord2 hover:bg-nord3 transition-all p-2 lg:p-4 m-4 rounded-md"
             onclick="this.parentElement.close()"
           >
             I'll choose my own and I know what each mod does
@@ -60,11 +61,13 @@ class SkyclientStuff extends HTMLElement {
       renderChooser(async (category, chooser) => {
         if (this.category) {
           const previousCategory = chooser.querySelector(`[data-category="${this.category}"]`);
-          previousCategory.classList.replace("bg-emerald-800", "bg-opacity-50");
+          previousCategory.classList.replace("bg-nord9", "bg-opacity-50");
+          previousCategory.classList.remove("text-black");
         }
         this.category = category;
         const newCategory = chooser.querySelector(`[data-category="${this.category}"]`);
-        newCategory.classList.replace("bg-opacity-50", "bg-emerald-800");
+        newCategory.classList.replace("bg-opacity-50", "bg-nord9");
+        newCategory.classList.add("text-black");
         this.querySelector("#optionArea").innerHTML = "";
         await this.renderOptions();
       }, "Other")
@@ -72,7 +75,7 @@ class SkyclientStuff extends HTMLElement {
     chooser.append(
       html`
         <button
-          class="bg-emerald-600 hover:bg-emerald-800 transition-all w-12 h-12 text-lg rounded-md mx-2"
+          class="bg-nord9 hover:bg-nord10 text-black transition-all w-12 h-12 text-lg rounded-lg mx-2"
           title="Add default mods"
           id="addDefault"
         >
@@ -83,7 +86,7 @@ class SkyclientStuff extends HTMLElement {
     chooser.append(
       html`
         <button
-          class="bg-amber-600 hover:bg-amber-800 transition-all w-12 h-12 text-lg rounded-md ml-2"
+          class="bg-nord11 text-black hover:bg-nord11/70 transition-all w-12 h-12 text-lg rounded-lg ml-2"
           title="Remove all mods"
           id="removeAll"
         >
@@ -101,7 +104,7 @@ class SkyclientStuff extends HTMLElement {
         return;
       const dialog = html`
         <dialog
-          class="fixed left-0 right-0 top-0 bottom-0 w-full h-full rounded-lg z-10 bg-neutral-800/70 backdrop-blur-md text-white text-center lg:text-2xl"
+          class="fixed left-0 right-0 top-0 bottom-0 w-full h-full rounded-lg z-10 bg-nord1/70 backdrop-blur-md text-white text-center lg:text-2xl"
         >
           <span class="font-bold">Removing all mods...</span>
         </dialog>
@@ -116,7 +119,7 @@ class SkyclientStuff extends HTMLElement {
         <h2 class="text-3xl">Removed all mods</h2>
         <button
           id="shut"
-          class="bg-emerald-600 hover:bg-emerald-800 transition-all p-2 m-4 rounded-md"
+          class="bg-nord10 hover:bg-nord10/70 transition-all p-2 m-4 rounded-md"
           onclick="this.parentElement.close()"
         >
           Shut
@@ -127,7 +130,6 @@ class SkyclientStuff extends HTMLElement {
   }
   async renderOptions() {
     const optionArea = this.querySelector("#optionArea");
-    await window.chosenGameRoot.getFolder("mods", true);
     await window.chosenGameRoot.getFolder("resourcepacks", true);
     const optionTags = await Promise.all(
       window.mods
@@ -159,7 +161,7 @@ class SkyclientStuff extends HTMLElement {
   async addDefaultMods() {
     const dialog = html`
       <dialog
-        class="fixed left-0 right-0 top-0 bottom-0 w-full h-full rounded-lg z-10 bg-neutral-800/70 backdrop-blur-md text-white text-center lg:text-2xl"
+        class="fixed left-0 right-0 top-0 bottom-0 w-full h-full rounded-lg z-10 bg-nord1/70 backdrop-blur-md text-white text-center lg:text-2xl"
       >
         <span class="font-bold">Installing default mods...</span>
         <h2 class="text-3xl lg:text-6xl">
@@ -170,6 +172,7 @@ class SkyclientStuff extends HTMLElement {
         </h2>
         <p>Waiting on</p>
         <ul class="mt-4"></ul>
+        <span class="italic">If this is stuck, DM KTibow#3960 so we can debug.</span>
       </dialog>
     `;
     document.body.append(dialog);
@@ -202,7 +205,6 @@ class SkyclientStuff extends HTMLElement {
               listElem.querySelector(`#mod-${mod.id}`).remove();
             })
           );
-          console.log(bundle, this, this.querySelector(`#bundle-${bundle.id}`));
           this.querySelector(`#bundle-${bundle.id}`).replaceWith(await renderBundle(bundle));
         } else {
           const mod = new Mod(modData);
@@ -230,7 +232,7 @@ class SkyclientStuff extends HTMLElement {
       <h2 class="text-3xl lg:text-6xl">Installed all default mods</h2>
       <button
         id="shut"
-        class="bg-emerald-600 hover:bg-emerald-800 transition-all p-2 m-4 rounded-md"
+        class="bg-nord10 hover:bg-nord10/70 transition-all p-2 m-4 rounded-md"
         onclick="this.parentElement.close()"
       >
         Shut

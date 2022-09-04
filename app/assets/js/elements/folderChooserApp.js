@@ -26,7 +26,7 @@ export const renderFolderChooserApp = async (elem) => {
     <li>
       <input type="radio" name="folder" value="" />
       <span class="text-gray-200"></span>
-      <button class="bg-emerald-600 hover:bg-emerald-800 transition-all text-white p-2 rounded-md">
+      <button class="bg-nord10 hover:bg-nord10/70 transition-all text-white p-2 rounded-md">
         Choose another folder
       </button>
     </li>
@@ -46,10 +46,18 @@ export const renderFolderChooserApp = async (elem) => {
   });
   options.append(customOption);
   options.firstChild.querySelector("input").checked = true;
-  elem.innerHTML =
-    "Your .minecraft folder is where everything is stored. " +
-    (detectedFolder ? "Mart found it for you.<br>" : "") +
-    "Choose the .minecraft folder that you want to install SkyClient to.<br>" +
-    "(If you're using MultiMC/PolyMC, make a new 1.8.9 Forge instance.)";
+  elem.innerHTML = `
+    <div class="bg-nord1 rounded-md my-4 p-4 flex gap-1">
+      <span class="mti">info</span>
+      <div class="inline-block">
+        Your .minecraft folder is where your Minecraft installation is stored, and where SkyClient will be installed. (${
+          detectedFolder ? "Mart found it for you." : "Choose it below."
+        })
+        <br />
+        Also, if you're using MultiMC/PolyMC, make a new 1.8.9 Forge instance first.
+      </div>
+    </div>
+    <p id="result"></p>
+  `;
   elem.append(options);
 };

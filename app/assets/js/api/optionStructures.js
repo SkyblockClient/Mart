@@ -25,7 +25,7 @@ export class Pack {
   async installPack(handle) {
     console.log(`${new Date().toISOString()}: getting folder resourcepacks`);
     const packFolder = await handle.getFolder("resourcepacks");
-    console.log(`${new Date().toISOString()}: downloading file ${this.fileName}`);
+    console.log(`${new Date().toISOString()}: downloading pack ${this.fileName}`);
     await packFolder.downloadToFile(this.fileName, this.fileURL);
   }
   async removePack(handle) {
@@ -53,6 +53,16 @@ export class Mod {
       : data.categories?.includes("5;All PvP")
       ? "PvP"
       : "Other";
+    // this.tag =
+    //   data.categories?.includes("4;Recommended Skyblock") ||
+    //   data.categories?.includes("6;Recommended PvP") ||
+    //   data.enabled
+    //     ? "Recommended"
+    //     : data.categories?.includes("3;For Dungeons")
+    //     ? "For Dungeons"
+    //     : data.categories?.includes("7;For Creators")
+    //     ? "For Creators"
+    //     : "";
   }
   async isModInstalled(handle) {
     const modFolder = await handle.getFolder("mods");
@@ -61,7 +71,7 @@ export class Mod {
   async installMod(handle) {
     console.log(`${new Date().toISOString()}: getting folder mods`);
     const modFolder = await handle.getFolder("mods");
-    console.log(`${new Date().toISOString()}: downloading file ${this.fileName}`);
+    console.log(`${new Date().toISOString()}: downloading mod ${this.fileName}`);
     await modFolder.downloadToFile(this.fileName, this.fileURL);
   }
   async removeMod(handle) {
