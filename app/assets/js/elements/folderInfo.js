@@ -38,7 +38,7 @@ class FolderInfo extends HTMLElement {
           );
         },
       ]);
-      // Find SKyClient folder path
+      // Find SkyClient folder path
       let skyclientFolderPath = window.chosen.path;
       if (!skyclientFolderPath) {
         const scProfileName = Object.keys(existingProfiles.profiles).find((profile) =>

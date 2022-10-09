@@ -22,6 +22,22 @@ export const renderFolderChooserApp = async (elem) => {
     `;
     options.append(option);
   }
+  const detectedInstances = await findPolyInstances();
+  if (detectedInstances?.length > 0) {
+    detectedInstances.forEach((instance) => {
+      const option = html`
+        <li>
+          <label>
+            <input type="radio" name="folder" value="${instance}" />
+            ${instance}
+          </label>
+        </li>
+      `;
+      options.append(option);
+    });
+  }
+  const detected = options.firstChild;
+
   const customOption = html`
     <li>
       <input type="radio" name="folder" value="" />
@@ -51,13 +67,38 @@ export const renderFolderChooserApp = async (elem) => {
       <span class="mti">info</span>
       <div class="inline-block">
         Your .minecraft folder is where your Minecraft installation is stored, and where SkyClient will be installed. (${
-          detectedFolder ? "Mart found it for you." : "Choose it below."
+          detected ? "Mart found it for you." : "Choose it below."
         })
         <br />
         Also, if you're using MultiMC/PolyMC, make a new 1.8.9 Forge instance first.
       </div>
     </div>
-    <p id="result"></p>
   `;
   elem.append(options);
+};
+
+const findPolyInstances = async () => {
+  if (NL_OS !== "Linux") return;
+  const polyPath = (await Neutralino.os.getEnv("HOME")) + "/.local/share/PolyMC/instances";
+  const polyExists = await doesFileExistNL(polyPath);
+  if (!polyExists) return;
+  const instances = await Neutralino.filesystem.readDirectory(polyPath);
+  const instanceWork = instances.map(async (dir) => {
+    if (dir.entry.startsWith(".") || dir.entry.startsWith("_") || dir.type != "DIRECTORY") return;
+    const instancePath = polyPath + `/${dir.entry}`;
+    try {
+      const config = await Neutralino.filesystem.readFile(instancePath + "/mmc-pack.json");
+      const configJson = JSON.parse(config);
+      if (
+        configJson.components.some(
+          (c) => c.cachedName == "Forge" && c.cachedRequires.some((r) => r.equals == "1.8.9")
+        )
+      )
+        return instancePath + "/.minecraft";
+    } catch (e) {
+      console.error(e);
+    }
+  });
+  const instancesProc = await Promise.all(instanceWork);
+  return instancesProc.filter((d) => d);
 };
