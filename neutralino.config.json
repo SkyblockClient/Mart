@@ -1,6 +1,6 @@
 {
   "applicationId": "co.skyclient.mart",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "defaultMode": "window",
   "documentRoot": "/app/",
   "url": "/",
