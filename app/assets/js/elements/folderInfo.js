@@ -17,7 +17,7 @@ class FolderInfo extends HTMLElement {
     try {
       // Setup Forge
       await Promise.all([
-        async () => {
+        (async () => {
           const versionsFolder = await window.chosen.getFolder(
             "versions/1.8.9-forge1.8.9-11.15.1.2318-1.8.9",
             true
@@ -26,8 +26,8 @@ class FolderInfo extends HTMLElement {
             "1.8.9-forge1.8.9-11.15.1.2318-1.8.9.json",
             "https://raw.githubusercontent.com/nacrt/SkyblockClient-REPO/main/files/forge/1.8.9-forge1.8.9-11.15.1.2318-1.8.9.json"
           );
-        },
-        async () => {
+        })(),
+        (async () => {
           const libsFolder = await window.chosen.getFolder(
             "libraries/net/minecraftforge/forge/1.8.9-11.15.1.2318-1.8.9",
             true
@@ -36,7 +36,7 @@ class FolderInfo extends HTMLElement {
             "forge-1.8.9-11.15.1.2318-1.8.9.jar",
             "https://raw.githubusercontent.com/nacrt/SkyblockClient-REPO/main/files/forge/forge-1.8.9-11.15.1.2318-1.8.9.jar"
           );
-        },
+        })(),
       ]);
       // Find SkyClient folder path
       let skyclientFolderPath = window.chosen.path;

@@ -78,23 +78,31 @@ export const renderFolderChooserApp = async (elem) => {
 };
 
 const findPolyInstances = async () => {
-  if (NL_OS !== "Linux") return;
-  const polyPath = (await Neutralino.os.getEnv("HOME")) + "/.local/share/PolyMC/instances";
+  const polyPath =
+    NL_OS === "Linux"
+      ? (await Neutralino.os.getEnv("HOME")) + "/.local/share/PolyMC/instances"
+      : NL_OS === "Windows"
+      ? (await Neutralino.os.getPath("data")) + "\\PolyMC\\instances"
+      : null;
+  if (!polyPath) return;
   const polyExists = await doesFileExistNL(polyPath);
   if (!polyExists) return;
+
   const instances = await Neutralino.filesystem.readDirectory(polyPath);
   const instanceWork = instances.map(async (dir) => {
     if (dir.entry.startsWith(".") || dir.entry.startsWith("_") || dir.type != "DIRECTORY") return;
-    const instancePath = polyPath + `/${dir.entry}`;
+    const instancePath = polyPath + SEPARATOR + dir.entry;
     try {
-      const config = await Neutralino.filesystem.readFile(instancePath + "/mmc-pack.json");
+      const config = await Neutralino.filesystem.readFile(
+        instancePath + SEPARATOR + "mmc-pack.json"
+      );
       const configJson = JSON.parse(config);
       if (
         configJson.components.some(
           (c) => c.cachedName == "Forge" && c.cachedRequires.some((r) => r.equals == "1.8.9")
         )
       )
-        return instancePath + "/.minecraft";
+        return instancePath + SEPARATOR + ".minecraft";
     } catch (e) {
       console.error(e);
     }
