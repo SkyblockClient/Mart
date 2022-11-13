@@ -91,9 +91,8 @@ const checkPolyInstance = async (dir) => {
       )
     )
       return instancePath + SEPARATOR + ".minecraft";
-    } catch (e) {
-      console.error(e);
-    }
+  } catch (e) {
+    console.error(e);
   }
 }
 
