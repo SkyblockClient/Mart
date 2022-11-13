@@ -13,7 +13,7 @@ jobs:
     
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
@@ -24,4 +24,4 @@ jobs:
         uses: actions/upload-artifact@v3.1.1
         with:
           name: Mart-build
-          path: dist/
+          path: dist/Mart/*
