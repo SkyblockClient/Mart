@@ -2,9 +2,9 @@ name: Build neutralino binaries
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build:
@@ -19,3 +19,8 @@ jobs:
           node-version: 16.x
       - run: npm i -g @neutralinojs/neu
       - run: neu build --release
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          name: Mart-build.zip
+          path: dist/*.zip
