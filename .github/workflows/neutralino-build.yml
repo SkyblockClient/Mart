@@ -19,9 +19,9 @@ jobs:
           node-version: 16.x
       - run: npm i -g @neutralinojs/neu
       - run: neu update 
-      - run: neu build --release
+      - run: neu build
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.1
         with:
-          name: Mart-build.zip
-          path: dist/*.zip
+          name: Mart-build
+          path: dist/
