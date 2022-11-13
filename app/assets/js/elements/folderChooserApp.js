@@ -78,35 +78,40 @@ export const renderFolderChooserApp = async (elem) => {
 };
 
 const findPolyInstances = async () => {
-  const polyPath =
+  let polyPaths =
     NL_OS === "Linux"
-      ? (await Neutralino.os.getEnv("HOME")) + "/.local/share/PolyMC/instances"
+      ? [(await Neutralino.os.getEnv("HOME")) + "/.local/share/PolyMC/instances", (await Neutralino.os.getEnv("HOME")) + "/.local/share/PrismLauncher/instances"]
       : NL_OS === "Windows"
-      ? (await Neutralino.os.getPath("data")) + "\\PolyMC\\instances"
+      ? [(await Neutralino.os.getPath("data")) + "\\PolyMC\\instances", (await Neutralino.os.getPath("data")) + "\\PrismLauncher\\instances"]
       : null;
-  if (!polyPath) return;
-  const polyExists = await doesFileExistNL(polyPath);
-  if (!polyExists) return;
-
-  const instances = await Neutralino.filesystem.readDirectory(polyPath);
-  const instanceWork = instances.map(async (dir) => {
-    if (dir.entry.startsWith(".") || dir.entry.startsWith("_") || dir.type != "DIRECTORY") return;
-    const instancePath = polyPath + SEPARATOR + dir.entry;
-    try {
-      const config = await Neutralino.filesystem.readFile(
-        instancePath + SEPARATOR + "mmc-pack.json"
-      );
-      const configJson = JSON.parse(config);
-      if (
-        configJson.components.some(
-          (c) => c.cachedName == "Forge" && c.cachedRequires.some((r) => r.equals == "1.8.9")
+  if (!polyPaths) return;
+  polyPaths = polyPaths.filter(async (path) => await doesFileExistNL(path));
+  if (polyPaths.length == 0) return;
+  let polyInstances = [];
+  for (let polyPathIndex in polyPaths) {
+    let polyPath = polyPaths[polyPathIndex];
+    const instances = await Neutralino.filesystem.readDirectory(polyPath);
+    const instanceWork = instances.map(async (dir) => {
+      if (dir.entry.startsWith(".") || dir.entry.startsWith("_") || dir.type != "DIRECTORY") return;
+      const instancePath = polyPath + SEPARATOR + dir.entry;
+      try {
+        const config = await Neutralino.filesystem.readFile(
+          instancePath + SEPARATOR + "mmc-pack.json"
+        );
+        const configJson = JSON.parse(config);
+        if (
+          configJson.components.some(
+            (c) => c.cachedName == "Forge" && c.cachedRequires.some((r) => r.equals == "1.8.9")
+          )
         )
-      )
-        return instancePath + SEPARATOR + ".minecraft";
-    } catch (e) {
-      console.error(e);
-    }
-  });
-  const instancesProc = await Promise.all(instanceWork);
-  return instancesProc.filter((d) => d);
+          return instancePath + SEPARATOR + ".minecraft";
+      } catch (e) {
+        console.error(e);
+      }
+    });
+    polyInstances.push(...await Promise.all(instanceWork))
+    console.log(polyInstances)
+  }
+  console.log(polyInstances)
+  return polyInstances.filter((d) => d);
 };
