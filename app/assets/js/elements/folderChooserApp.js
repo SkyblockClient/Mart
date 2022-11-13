@@ -115,8 +115,6 @@ const findPolyInstances = async () => {
     const instances = await Neutralino.filesystem.readDirectory(polyPath);
     const instanceWork = instances.map(checkPolyInstance);
     polyInstances.push(...await Promise.all(instanceWork))
-    console.log(polyInstances)
   }
-  console.log(polyInstances)
   return polyInstances.filter((d) => d);
 };
