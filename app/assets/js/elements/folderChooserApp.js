@@ -77,38 +77,43 @@ export const renderFolderChooserApp = async (elem) => {
   elem.append(options);
 };
 
+const checkPolyInstance = async (dir) => {
+  if (dir.entry.startsWith(".") || dir.entry.startsWith("_") || dir.type != "DIRECTORY") return;
+  const instancePath = polyPath + SEPARATOR + dir.entry;
+  try {
+    const config = await Neutralino.filesystem.readFile(
+      instancePath + SEPARATOR + "mmc-pack.json"
+    );
+    const configJson = JSON.parse(config);
+    if (
+      configJson.components.some(
+        (c) => c.cachedName == "Forge" && c.cachedRequires.some((r) => r.equals == "1.8.9")
+      )
+    )
+      return instancePath + SEPARATOR + ".minecraft";
+    } catch (e) {
+      console.error(e);
+    }
+  }
+}
+
 const findPolyInstances = async () => {
+  let base_dir = NL_OS === "Linux" ? await Neutralino.os.getEnv("HOME") : 
+    NL_OS === "Windows" ? await Neutralino.os.getPath("data") : null;
+  if (!base_dir) return;
   let polyPaths =
     NL_OS === "Linux"
-      ? [(await Neutralino.os.getEnv("HOME")) + "/.local/share/PolyMC/instances", (await Neutralino.os.getEnv("HOME")) + "/.local/share/PrismLauncher/instances"]
+      ? [base_dir + "/.local/share/PolyMC/instances", base_dir + "/.local/share/PrismLauncher/instances"]
       : NL_OS === "Windows"
-      ? [(await Neutralino.os.getPath("data")) + "\\PolyMC\\instances", (await Neutralino.os.getPath("data")) + "\\PrismLauncher\\instances"]
+      ? [base_dir + "\\PolyMC\\instances", base_dir + "\\PrismLauncher\\instances"]
       : null;
-  if (!polyPaths) return;
   polyPaths = polyPaths.filter(async (path) => await doesFileExistNL(path));
   if (polyPaths.length == 0) return;
   let polyInstances = [];
   for (let polyPathIndex in polyPaths) {
     let polyPath = polyPaths[polyPathIndex];
     const instances = await Neutralino.filesystem.readDirectory(polyPath);
-    const instanceWork = instances.map(async (dir) => {
-      if (dir.entry.startsWith(".") || dir.entry.startsWith("_") || dir.type != "DIRECTORY") return;
-      const instancePath = polyPath + SEPARATOR + dir.entry;
-      try {
-        const config = await Neutralino.filesystem.readFile(
-          instancePath + SEPARATOR + "mmc-pack.json"
-        );
-        const configJson = JSON.parse(config);
-        if (
-          configJson.components.some(
-            (c) => c.cachedName == "Forge" && c.cachedRequires.some((r) => r.equals == "1.8.9")
-          )
-        )
-          return instancePath + SEPARATOR + ".minecraft";
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    const instanceWork = instances.map(checkPolyInstance);
     polyInstances.push(...await Promise.all(instanceWork))
     console.log(polyInstances)
   }
