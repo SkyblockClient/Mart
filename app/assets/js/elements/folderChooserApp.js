@@ -4,38 +4,18 @@ export const renderFolderChooserApp = async (elem) => {
   const options = html`
     <ul></ul>
   `;
-  const vanillaLauncherFolder =
-    NL_OS === "Linux"
-      ? (await Neutralino.os.getEnv("HOME")) + SEPARATOR + ".minecraft"
-      : NL_OS === "Windows"
-      ? (await Neutralino.os.getPath("data")) + SEPARATOR + ".minecraft"
-      : (await Neutralino.os.getPath("data")) + SEPARATOR + "minecraft";
-  const detectedFolder = await doesFileExistNL(vanillaLauncherFolder);
-  if (detectedFolder) {
+  const detectedOptions = await recommendPaths();
+  detectedOptions.forEach((instance) => {
     const option = html`
       <li>
         <label>
-          <input type="radio" name="folder" value="${vanillaLauncherFolder}" />
-          ${vanillaLauncherFolder}
+          <input type="radio" name="folder" value="${instance}" />
+          ${instance}
         </label>
       </li>
     `;
     options.append(option);
-  }
-  const detectedInstances = await findPolyInstances();
-  if (detectedInstances?.length > 0) {
-    detectedInstances.forEach((instance) => {
-      const option = html`
-        <li>
-          <label>
-            <input type="radio" name="folder" value="${instance}" />
-            ${instance}
-          </label>
-        </li>
-      `;
-      options.append(option);
-    });
-  }
+  });
   const detected = options.firstChild;
 
   const customOption = html`
@@ -77,21 +57,11 @@ export const renderFolderChooserApp = async (elem) => {
   elem.append(options);
 };
 
-const findPolyInstances = async () => {
-  const polyPath =
-    NL_OS === "Linux"
-      ? (await Neutralino.os.getEnv("HOME")) + "/.local/share/PolyMC/instances"
-      : NL_OS === "Windows"
-      ? (await Neutralino.os.getPath("data")) + "\\PolyMC\\instances"
-      : null;
-  if (!polyPath) return;
-  const polyExists = await doesFileExistNL(polyPath);
-  if (!polyExists) return;
-
-  const instances = await Neutralino.filesystem.readDirectory(polyPath);
+const checkInstance = async (path) => {
+  const instances = await Neutralino.filesystem.readDirectory(path);
   const instanceWork = instances.map(async (dir) => {
     if (dir.entry.startsWith(".") || dir.entry.startsWith("_") || dir.type != "DIRECTORY") return;
-    const instancePath = polyPath + SEPARATOR + dir.entry;
+    const instancePath = path + SEPARATOR + dir.entry;
     try {
       const config = await Neutralino.filesystem.readFile(
         instancePath + SEPARATOR + "mmc-pack.json"
@@ -108,5 +78,44 @@ const findPolyInstances = async () => {
     }
   });
   const instancesProc = await Promise.all(instanceWork);
-  return instancesProc.filter((d) => d);
+  return instancesProc.filter((i) => i);
+};
+const recommendPaths = async () => {
+  let pathsFound;
+  if (NL_OS == "Linux") {
+    const home = await Neutralino.os.getEnv("HOME");
+    pathsFound = [
+      [true, home + "/.local/share/PolyMC/instances"],
+      [true, home + "/.local/share/PrismLauncher/instances"],
+      [true, home + "/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher/instances"],
+      [false, home + "/.minecraft"],
+      [false, home + "/.var/app/com.mojang.Minecraft/data/minecraft"],
+    ];
+  } else if (NL_OS == "Windows") {
+    const data = await Neutralino.os.getPath("data");
+    pathsFound = [
+      [true, data + "\\PrismLauncher\\instances"],
+      [true, data + "\\PolyMC\\instances"],
+      [false, data + "\\.minecraft"],
+    ];
+  } else {
+    const data = await Neutralino.os.getPath("data");
+    pathsFound = [[false, data + "/minecraft"]];
+  }
+  pathsFound = await Promise.all(
+    pathsFound.map(async (path) => [...path, await doesFileExistNL(path[1])])
+  );
+  pathsFound = pathsFound.filter((path) => path[2]);
+
+  let availablePaths = [];
+  await Promise.all(
+    pathsFound.map(async (path) => {
+      if (path[0]) {
+        availablePaths.push(...(await checkInstance(path[1])));
+        return;
+      }
+      availablePaths.push(path[1]);
+    })
+  );
+  return availablePaths;
 };
