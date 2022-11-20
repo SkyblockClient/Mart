@@ -24,7 +24,7 @@ class FolderInfo extends HTMLElement {
           );
           await versionsFolder.downloadToFile(
             "1.8.9-forge1.8.9-11.15.1.2318-1.8.9.json",
-            "https://raw.githubusercontent.com/nacrt/SkyblockClient-REPO/main/files/forge/1.8.9-forge1.8.9-11.15.1.2318-1.8.9.json"
+            "https://raw.githubusercontent.com/SkyblockClient/SkyblockClient-REPO/main/files/forge/1.8.9-forge1.8.9-11.15.1.2318-1.8.9.json"
           );
         })(),
         (async () => {
@@ -34,7 +34,7 @@ class FolderInfo extends HTMLElement {
           );
           await libsFolder.downloadToFile(
             "forge-1.8.9-11.15.1.2318-1.8.9.jar",
-            "https://raw.githubusercontent.com/nacrt/SkyblockClient-REPO/main/files/forge/forge-1.8.9-11.15.1.2318-1.8.9.jar"
+            "https://raw.githubusercontent.com/SkyblockClient/SkyblockClient-REPO/main/files/forge/forge-1.8.9-11.15.1.2318-1.8.9.jar"
           );
         })(),
       ]);

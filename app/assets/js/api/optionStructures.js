@@ -5,13 +5,13 @@ export class Pack {
     this.description = data.description;
     this.hidden = data.hidden;
     this.enabledByDefault = data.enabled;
-    this.authorIcon = `https://raw.githubusercontent.com/nacrt/SkyblockClient-REPO/main/files/icons/${data.icon}`;
+    this.authorIcon = `https://raw.githubusercontent.com/SkyblockClient/SkyblockClient-REPO/main/files/icons/${data.icon}`;
     this.author = data.creator;
     this.screenshot = data.screenshot;
     this.fileName = data.file;
     this.fileURL =
       data.url ||
-      `https://raw.githubusercontent.com/nacrt/SkyblockClient-REPO/main/files/packs/${data.file}`;
+      `https://raw.githubusercontent.com/SkyblockClient/SkyblockClient-REPO/main/files/packs/${data.file}`;
     this.category = data.categories?.includes("1;All Skyblock")
       ? "Skyblock"
       : data.categories?.includes("3;All PvP")
@@ -42,12 +42,12 @@ export class Mod {
     this.description = data.description;
     this.hidden = data.hidden;
     this.enabledByDefault = data.enabled;
-    this.authorIcon = `https://raw.githubusercontent.com/nacrt/SkyblockClient-REPO/main/files/icons/${data.icon}`;
+    this.authorIcon = `https://raw.githubusercontent.com/SkyblockClient/SkyblockClient-REPO/main/files/icons/${data.icon}`;
     this.author = data.creator;
     this.fileName = data.file;
     this.fileURL =
       data.url ||
-      `https://raw.githubusercontent.com/nacrt/SkyblockClient-REPO/main/files/mods/${data.file}`;
+      `https://raw.githubusercontent.com/SkyblockClient/SkyblockClient-REPO/main/files/mods/${data.file}`;
     this.category = data.categories?.includes("2;All Skyblock")
       ? "Skyblock"
       : data.categories?.includes("5;All PvP")
@@ -88,7 +88,7 @@ export class Bundle {
     this.description = data.description;
     this.hidden = data.hidden;
     this.enabledByDefault = data.enabled;
-    this.icon = `https://raw.githubusercontent.com/nacrt/SkyblockClient-REPO/main/files/icons/${data.icon}`;
+    this.icon = `https://raw.githubusercontent.com/SkyblockClient/SkyblockClient-REPO/main/files/icons/${data.icon}`;
     this.packages = data.packages.concat(this.id).map((id) => {
       const mod = allMods.find((mod) => mod.id == id);
       return {
@@ -98,7 +98,7 @@ export class Bundle {
         desc: mod.description,
         url:
           mod.url ||
-          `https://raw.githubusercontent.com/nacrt/SkyblockClient-REPO/main/files/mods/${mod.file}`,
+          `https://raw.githubusercontent.com/SkyblockClient/SkyblockClient-REPO/main/files/mods/${mod.file}`,
       };
     });
     this.category = data.categories?.includes("2;All Skyblock")
