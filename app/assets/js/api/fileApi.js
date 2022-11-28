@@ -47,7 +47,10 @@ const downloadFile = async (url, path) => {
   window.dlLocks.push(path);
   let response;
   try {
-    response = await fetch(url, { cache: "force-cache" });
+    response = await fetch(url, {
+      cache: "force-cache",
+      headers: { "User-Agent": "github.com/SkyblockClient (mart)" },
+    });
   } catch (e) {
     console.debug("downloadFile (global): using proxy");
     response = await fetch(
