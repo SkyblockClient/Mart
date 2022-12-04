@@ -16,7 +16,7 @@
 }
 
 /*
-! tailwindcss v3.1.8 | MIT License | https://tailwindcss.com
+! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -47,6 +47,7 @@
 2. Prevent adjustments of font size after orientation changes in iOS.
 3. Use a more readable tab size.
 4. Use the user's configured `sans` font-family by default.
+5. Use the user's configured `sans` font-feature-settings by default.
 */
 
 html {
@@ -61,6 +62,8 @@ html {
   /* 3 */
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   /* 4 */
+  font-feature-settings: normal;
+  /* 5 */
 }
 
 /*
@@ -427,54 +430,13 @@ video {
   height: auto;
 }
 
-*, ::before, ::after{
-  --tw-border-spacing-x: 0;
-  --tw-border-spacing-y: 0;
-  --tw-translate-x: 0;
-  --tw-translate-y: 0;
-  --tw-rotate: 0;
-  --tw-skew-x: 0;
-  --tw-skew-y: 0;
-  --tw-scale-x: 1;
-  --tw-scale-y: 1;
-  --tw-pan-x:  ;
-  --tw-pan-y:  ;
-  --tw-pinch-zoom:  ;
-  --tw-scroll-snap-strictness: proximity;
-  --tw-ordinal:  ;
-  --tw-slashed-zero:  ;
-  --tw-numeric-figure:  ;
-  --tw-numeric-spacing:  ;
-  --tw-numeric-fraction:  ;
-  --tw-ring-inset:  ;
-  --tw-ring-offset-width: 0px;
-  --tw-ring-offset-color: #fff;
-  --tw-ring-color: rgb(59 130 246 / 0.5);
-  --tw-ring-offset-shadow: 0 0 #0000;
-  --tw-ring-shadow: 0 0 #0000;
-  --tw-shadow: 0 0 #0000;
-  --tw-shadow-colored: 0 0 #0000;
-  --tw-blur:  ;
-  --tw-brightness:  ;
-  --tw-contrast:  ;
-  --tw-grayscale:  ;
-  --tw-hue-rotate:  ;
-  --tw-invert:  ;
-  --tw-saturate:  ;
-  --tw-sepia:  ;
-  --tw-drop-shadow:  ;
-  --tw-backdrop-blur:  ;
-  --tw-backdrop-brightness:  ;
-  --tw-backdrop-contrast:  ;
-  --tw-backdrop-grayscale:  ;
-  --tw-backdrop-hue-rotate:  ;
-  --tw-backdrop-invert:  ;
-  --tw-backdrop-opacity:  ;
-  --tw-backdrop-saturate:  ;
-  --tw-backdrop-sepia:  ;
+/* Make elements with the HTML hidden attribute stay hidden by default */
+
+[hidden] {
+  display: none;
 }
 
-::-webkit-backdrop{
+*, ::before, ::after{
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
   --tw-translate-x: 0;
@@ -745,18 +707,6 @@ video {
   flex-grow: 1;
 }
 
-@-webkit-keyframes wipe{
-  0%{
-    -webkit-clip-path: inset(0% 100% 0% 0%);
-            clip-path: inset(0% 100% 0% 0%);
-  }
-
-  100%{
-    -webkit-clip-path: inset(0% 0% 0% 0%);
-            clip-path: inset(0% 0% 0% 0%);
-  }
-}
-
 @keyframes wipe{
   0%{
     -webkit-clip-path: inset(0% 100% 0% 0%);
@@ -770,8 +720,7 @@ video {
 }
 
 .animate-wipe{
-  -webkit-animation: wipe 1s ease-in-out;
-          animation: wipe 1s ease-in-out;
+  animation: wipe 1s ease-in-out;
 }
 
 .cursor-pointer{
@@ -850,11 +799,6 @@ video {
   background-color: rgb(94 129 172 / var(--tw-bg-opacity));
 }
 
-.bg-black{
-  --tw-bg-opacity: 1;
-  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
-}
-
 .bg-nord1{
   --tw-bg-opacity: 1;
   background-color: rgb(59 66 82 / var(--tw-bg-opacity));
@@ -882,15 +826,6 @@ video {
 .bg-nord11{
   --tw-bg-opacity: 1;
   background-color: rgb(191 97 106 / var(--tw-bg-opacity));
-}
-
-.bg-neutral-900{
-  --tw-bg-opacity: 1;
-  background-color: rgb(23 23 23 / var(--tw-bg-opacity));
-}
-
-.bg-blue-900\/50{
-  background-color: rgb(30 58 138 / 0.5);
 }
 
 .bg-opacity-50{
@@ -1032,11 +967,11 @@ body {
     "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-h1, 
-h2, 
-h3, 
-h4, 
-h5, 
+h1,
+h2,
+h3,
+h4,
+h5,
 h6{
   font-weight: 700;
   letter-spacing: 0.025em;
@@ -1050,7 +985,6 @@ h6{
 }
 
 .scale-pixelated {
-  image-rendering: -moz-crisp-edges;
   image-rendering: pixelated;
 }
 
@@ -1092,8 +1026,8 @@ h6{
   content: var(--tw-content);
 }
 
-.hover\:border-b-2:hover{
-  border-bottom-width: 2px;
+.hover\:border-b-\[1px\]:hover{
+  border-bottom-width: 1px;
 }
 
 .hover\:border-nord10:hover{
