@@ -83,7 +83,7 @@ export const renderFolderChooserWeb = async (elem) => {
           <code class="font-mono">showDirectoryPicker</code>
           API.
           <br />
-          Use Chrome, Edge, or <a href="https://github.com/KTibow/Mart/releases/latest">download Mart as an app.</a>
+          Use Chrome, Edge, or <a style="text-decoration: underline" href="https://github.com/KTibow/Mart/releases/latest">download Mart as an app.</a>
         </div>
       </div>
     `;
