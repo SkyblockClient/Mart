@@ -937,6 +937,10 @@ video {
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
+.underline{
+  text-decoration-line: underline;
+}
+
 .accent-nord8{
   accent-color: #88C0D0;
 }
