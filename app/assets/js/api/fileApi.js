@@ -53,13 +53,7 @@ const downloadFile = async (url, path) => {
     });
   } catch (e) {
     console.debug("downloadFile (global): using proxy");
-    response = await fetch(
-      "https://Cloudclient-Proxy.ktibow.repl.co/mod?" +
-        new URLSearchParams({
-          file: path.split("/").at(-1),
-          url: url.split("//").at(-1),
-        }).toString()
-    );
+    response = await fetch("https://mart-proxy.ktibow.workers.dev/?url=" + encodeURIComponent(url));
   }
   window.dlLocks.splice(window.dlLocks.indexOf(path), 1);
   console.log(`${new Date().toISOString()}: done downloading file`);
