@@ -5,7 +5,7 @@ import "./elements/folderInfo.js";
 import "./elements/skyclientStuff.js";
 
 window.onerror = function (msg, url, line) {
-  alert(`Something went wrong inside of Mart, DM KTibow#3960: ${msg}
+  alert(`Something went wrong inside of Mart, message @KTibow: ${msg}
 ${url}:${line}`);
 };
 el("#next").addEventListener("click", () => window.nextStep());
