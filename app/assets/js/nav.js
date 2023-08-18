@@ -9,14 +9,6 @@ window.onerror = function (msg, url, line) {
 ${url}:${line}`);
 };
 el("#next").addEventListener("click", () => window.nextStep());
-const splashDisplayed = await susStorage.splashDisplayed;
-if (!splashDisplayed) {
-  el("#welcome").showModal();
-  document.querySelector("#shut").addEventListener("click", () => {
-    susStorage.splashDisplayed = true;
-    el("#welcome").close();
-  });
-}
 
 el("main").innerHTML = `
   <h1 class="text-3xl">1. Choose your .minecraft folder</h1>
@@ -30,19 +22,19 @@ window.nextStep = async () => {
   </span>
   `;
   if (IS_NEUTRALINO) {
-    window.chosen = document.querySelector("input:checked").value;
-    if (!window.chosen) {
+    const path = document.querySelector("input:checked")?.value;
+    if (!path) {
       el("#next").innerHTML = "Please choose a folder";
       return;
     }
-    susStorage.chosenPath = window.chosen;
-    window.chosen = new AnchorApp(window.chosen);
+    susStorage.chosenPath = path;
+    window.chosen = new AnchorApp(path);
   } else {
-    if (!window.chosen) {
+    if (!window.chosenHandle) {
       el("#next").innerHTML = "Please choose a folder";
       return;
     }
-    window.chosen = new AnchorWeb(window.chosen);
+    window.chosen = new AnchorWeb(window.chosenHandle);
   }
   delete window.nextStep;
   el("main").innerHTML = `

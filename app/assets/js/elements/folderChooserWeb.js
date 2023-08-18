@@ -28,19 +28,19 @@ export const renderFolderChooserWeb = async (elem) => {
     document.querySelector("#next").classList.remove("hidden");
     elem.querySelector(
       "#result"
-    ).innerHTML = `<span class="mti">check</span> You dropped ${window.chosen.name}`;
+    ).innerHTML = `<span class="mti">check</span> You dropped ${window.chosenHandle.name}`;
   };
   dropArea.addEventListener("drop", async (e) => {
     e.preventDefault();
     e.stopPropagation();
     dropText.classList.remove("font-bold");
     const dropped = Array.from(e.dataTransfer.items).find((item) => item.kind == "file");
-    window.chosen = await dropped.getAsFileSystemHandle();
+    window.chosenHandle = await dropped.getAsFileSystemHandle();
     recognizeFolder();
   });
   dropArea.addEventListener("click", async () => {
     if (!elem.querySelector("details")) elem.querySelector("#result").prepend(errorExplanation);
-    window.chosen = await window.showDirectoryPicker();
+    window.chosenHandle = await window.showDirectoryPicker();
     recognizeFolder();
   });
   elem.innerHTML = String.raw`
