@@ -111,7 +111,7 @@ class FolderInfo extends HTMLElement {
       this.genCard(
         "warning",
         "Something went wrong setting up your SkyClient profile",
-        "An error happened while setting up your SkyClient profile. Message @KTibow about this. " +
+        "An error happened while setting up your SkyClient profile. DM @ktibow about this. " +
           "Anyway, you'll need to make a new installation manually."
       );
     }

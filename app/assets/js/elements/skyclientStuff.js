@@ -172,7 +172,7 @@ class SkyclientStuff extends HTMLElement {
         </h2>
         <p>Waiting on</p>
         <ul class="mt-4"></ul>
-        <span class="italic">If this is stuck, press ESC to close.</span>
+        <span class="italic">If this is stuck, first try to open your browser console and DM a screenshot of any errors to @ktibow. If you need to close it, press ESC.</span>
       </dialog>
     `;
     document.body.append(dialog);
