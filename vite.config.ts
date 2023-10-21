@@ -28,8 +28,5 @@ export default defineConfig(({ mode, command }) => {
       target: "es2020",
       outDir: "build",
     },
-    define: {
-      browser: false,
-    },
   };
 });
