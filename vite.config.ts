@@ -27,6 +27,7 @@ export default defineConfig(({ mode, command }) => {
       rollupOptions: mode == "neutralino" ? neutralinoOptions : undefined,
       target: "es2020",
       outDir: "build",
+      emptyOutDir: true,
     },
   };
 });
