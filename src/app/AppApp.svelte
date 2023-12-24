@@ -1,15 +1,28 @@
 <script lang="ts">
-  import { SnackbarAnim, type SnackbarIn } from "m3-svelte";
-  import ChooserApp from "./ChooserApp.svelte";
   import { filesystem } from "@neutralinojs/lib";
+  import { SnackbarAnim, type SnackbarIn } from "m3-svelte";
+  import { isDirectory, separator } from "./neutralino";
+  import ChooserApp from "./ChooserApp.svelte";
   import SetupApp from "./SetupApp.svelte";
-  import { isDirectory } from "./neutralino";
+  import Mart from "./Mart.svelte";
 
   let snackbar: (data: SnackbarIn) => void;
 
-  let state: { page: "chooser" } | { page: "setup"; path: string } = {
+  let state:
+    | { page: "chooser" }
+    | { page: "setup"; path: string }
+    | {
+        page: "mart";
+        path: string;
+        skyclient: string;
+        mods: string;
+        packs: string;
+      } = {
     page: "chooser",
   };
+  let mods: any[], packs: any[];
+  window.mods.then((m: any[]) => (mods = m));
+  window.packs.then((p: any[]) => (packs = p));
 
   const path = async (e: CustomEvent<string>) => {
     console.group("validating folder (app)...");
@@ -45,17 +58,45 @@
     }
     console.groupEnd();
   };
+  const next = async (e: CustomEvent<string>) => {
+    console.group("opening mart (app)...");
+    await Promise.allSettled([
+      filesystem.createDirectory(`${e.detail}${separator}mods`),
+      filesystem.createDirectory(`${e.detail}${separator}resourcepacks`),
+    ]);
+    state = {
+      page: "mart",
+      path: (state as { path: string }).path,
+      skyclient: e.detail,
+      mods: `${e.detail}${separator}mods`,
+      packs: `${e.detail}${separator}resourcepacks`,
+    };
+    console.groupEnd();
+  };
 </script>
 
 {#if state.page == "chooser"}
   <div class="article">
-    <h2 class="m3-font-headline-small">Choose your .minecraft folder</h2>
+    <h1 class="m3-font-headline-small">Choose your .minecraft folder</h1>
     <ChooserApp on:path={path} />
   </div>
 {:else if state.page == "setup"}
   <div class="article">
-    <h2 class="m3-font-headline-small">Set up SkyClient</h2>
-    <SetupApp {state} />
+    <h1 class="m3-font-headline-small">Set up SkyClient</h1>
+    <SetupApp {state} on:next={next} />
+  </div>
+{:else if mods && packs}
+  <h1
+    class="m3-font-headline-small"
+    style="height: 0; margin: 0; overflow: hidden;"
+  >
+    Mart
+  </h1>
+  <Mart {mods} {packs} />
+{:else}
+  <div class="article">
+    <h1 class="m3-font-headline-small">Check your internet</h1>
+    <p>Failed to load mods/packs</p>
   </div>
 {/if}
 
@@ -63,11 +104,13 @@
 
 <style>
   .article {
-    width: min(40rem, calc(100vw - 6rem));
+    width: min(40rem, calc(100vw - 8rem));
     align-self: center;
-    margin: 0 2rem;
   }
-  h2 {
+  h1 {
     margin: 0 0 2rem 0;
+  }
+  p {
+    margin: 0;
   }
 </style>

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { filesystem } from "@neutralinojs/lib";
+  import { createEventDispatcher } from "svelte";
   import {
     isDirectory,
     recursivelyCreate,
@@ -16,6 +17,7 @@
   let profileStatus: "yes" | "no" | "loading" | undefined;
   let folderStatus: "yes" | "no" | "loading" | undefined;
   let profiles: any;
+  const dispatch = createEventDispatcher();
   const skyclient = `${state.path}${separator}skyclient`;
 
   const load = async () => {
@@ -139,6 +141,13 @@
     }
     console.groupEnd();
   };
+  const next = async () => {
+    let path = state.path;
+    if (mode == "minecraft" && (await isDirectory(skyclient))) {
+      path = skyclient;
+    }
+    dispatch("next", path);
+  };
 </script>
 
 <Setup
@@ -148,4 +157,5 @@
   on:createProfile={createProfile}
   on:deleteFolder={deleteFolder}
   on:createFolder={createFolder}
+  on:next={next}
 />

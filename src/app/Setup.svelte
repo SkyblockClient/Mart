@@ -1,11 +1,11 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte";
-  import iconQuestion from "@iconify-icons/ic/outline-question-mark";
-  import iconSliders from "@iconify-icons/ic/tune";
-  import iconTrash from "@iconify-icons/ic/delete";
-  import iconPlus from "@iconify-icons/ic/add";
-  import iconCheck from "@iconify-icons/ic/check";
-  import iconRight from "@iconify-icons/ic/arrow-forward";
+  import Icon from "./lib/Icon.svelte";
+  import iconQuestion from "@ktibow/iconset-ic/outline-question-mark";
+  import iconSliders from "@ktibow/iconset-ic/tune";
+  import iconTrash from "@ktibow/iconset-ic/delete";
+  import iconPlus from "@ktibow/iconset-ic/add";
+  import iconCheck from "@ktibow/iconset-ic/check";
+  import iconRight from "@ktibow/iconset-ic/arrow-forward";
   import { Button, CircularProgressIndeterminate } from "m3-svelte";
   import { createEventDispatcher } from "svelte";
 
@@ -77,6 +77,8 @@
       </div>
     </div>
   </div>
+{:else}
+  <p>...</p>
 {/if}
 
 {#if mode}
@@ -91,8 +93,6 @@
     <Icon icon={iconRight} />
     Next
   </Button>
-{:else}
-  <p>...</p>
 {/if}
 
 <style>

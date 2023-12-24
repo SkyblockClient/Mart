@@ -4,23 +4,26 @@
     "app-1": "vite build --mode neutralino && vite dev",
     "app-2": "neu run --frontend-lib-dev",
     "app-build": "vite build --mode neutralino; rm -rf dist; neu build; chmod +x dist/Mart/Mart-linux* dist/Mart/Mart-mac*",
+    "check": "svelte-check",
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@iconify-icons/ic": "^1.2.13",
-    "@iconify/svelte": "^3.1.4",
-    "@neutralinojs/lib": "^3.12.0",
-    "@neutralinojs/neu": "^9.8.0",
-    "@sveltejs/vite-plugin-svelte": "^2.4.6",
+    "@iconify/types": "^2.0.0",
+    "@ktibow/iconset-ic": "^1.0.32",
+    "@neutralinojs/lib": "^3.13.0",
+    "@neutralinojs/neu": "^10.1.0",
+    "@sveltejs/vite-plugin-svelte": "^3.0.1",
     "@tsconfig/svelte": "^5.0.2",
-    "@types/wicg-file-system-access": "^2023.10.2",
+    "@types/wicg-file-system-access": "^2023.10.4",
     "devalue": "^4.3.2",
-    "m3-svelte": "^2.0.7",
-    "svelte": "^4.2.2",
+    "m3-svelte": "^3.0.1",
+    "prettier": "^3.1.1",
+    "svelte": "^4.2.8",
+    "svelte-check": "^3.6.2",
     "tslib": "^2.6.2",
-    "typescript": "^5.2.2",
-    "vite": "^4.5.0"
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10"
   }
 }

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import Setup from "./Setup.svelte";
   import { recursivelyGet } from "./web";
 
@@ -7,6 +8,7 @@
   let profileStatus: "yes" | "no" | "loading" | undefined;
   let folderStatus: "yes" | "no" | "loading" | undefined;
   let profiles: any;
+  const dispatch = createEventDispatcher();
 
   const load = async () => {
     console.group("checking folder (web)...");
@@ -185,6 +187,14 @@
     }
     console.groupEnd();
   };
+  const next = async () => {
+    let handle = state.handle;
+    if (mode == "minecraft")
+      try {
+        handle = await state.handle.getDirectoryHandle("skyclient");
+      } catch {}
+    dispatch("next", handle);
+  };
 </script>
 
 <Setup
@@ -194,4 +204,5 @@
   on:createProfile={createProfile}
   on:deleteFolder={deleteFolder}
   on:createFolder={createFolder}
+  on:next={next}
 />

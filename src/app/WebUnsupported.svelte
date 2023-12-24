@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte";
-  import iconError from "@iconify-icons/ic/error";
+  import Icon from "./lib/Icon.svelte";
+  import iconError from "@ktibow/iconset-ic/error";
   import { ButtonLink } from "m3-svelte";
 </script>
 

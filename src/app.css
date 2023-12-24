@@ -2,7 +2,7 @@
   color-scheme: dark;
   background-color: rgb(var(--m3-scheme-background));
   color: rgb(var(--m3-scheme-on-background));
-  font-family: var(--m3-font);
+  accent-color: rgb(var(--m3-scheme-primary));
 
   --m3-font: Inter, system-ui, sans-serif !important;
   --m3-scheme-primary: 255 182 147;

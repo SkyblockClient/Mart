@@ -1,8 +1,9 @@
 <script lang="ts">
   import { SnackbarAnim, type SnackbarIn } from "m3-svelte";
-  import ChooserWeb from "./ChooserWeb.svelte";
   import WebUnsupported from "./WebUnsupported.svelte";
+  import ChooserWeb from "./ChooserWeb.svelte";
   import SetupWeb from "./SetupWeb.svelte";
+  import Mart from "./Mart.svelte";
 
   let snackbar: (data: SnackbarIn) => void;
 
@@ -11,9 +12,19 @@
     | undefined;
   let state:
     | { page: "chooser" }
-    | { page: "setup"; handle: FileSystemDirectoryHandle } = {
+    | { page: "setup"; handle: FileSystemDirectoryHandle }
+    | {
+        page: "mart";
+        handle: FileSystemDirectoryHandle;
+        skyclient: FileSystemDirectoryHandle;
+        mods: FileSystemDirectoryHandle;
+        packs: FileSystemDirectoryHandle;
+      } = {
     page: "chooser",
   };
+  let mods: any[], packs: any[];
+  window.mods.then((m: any[]) => (mods = m));
+  window.packs.then((p: any[]) => (packs = p));
 
   const handle = (e: CustomEvent<FileSystemHandle>) => {
     console.group("validating folder (web)...");
@@ -38,11 +49,26 @@
     };
     console.groupEnd();
   };
+  const next = async (e: CustomEvent<FileSystemDirectoryHandle>) => {
+    console.group("opening mart (web)...");
+    const [mods, packs] = await Promise.all([
+      e.detail.getDirectoryHandle("mods", { create: true }),
+      e.detail.getDirectoryHandle("resourcepacks", { create: true }),
+    ]);
+    state = {
+      page: "mart",
+      handle: (state as { handle: FileSystemDirectoryHandle }).handle,
+      skyclient: e.detail,
+      mods,
+      packs,
+    };
+    console.groupEnd();
+  };
 </script>
 
 {#if state.page == "chooser"}
   <div class="article">
-    <h2 class="m3-font-headline-small">Choose your .minecraft folder</h2>
+    <h1 class="m3-font-headline-small">Choose your .minecraft folder</h1>
     {#if showDirectoryPicker}
       <ChooserWeb {showDirectoryPicker} on:handle={handle} />
     {:else}
@@ -51,8 +77,21 @@
   </div>
 {:else if state.page == "setup"}
   <div class="article">
-    <h2 class="m3-font-headline-small">Set up SkyClient</h2>
-    <SetupWeb {state} />
+    <h1 class="m3-font-headline-small">Set up SkyClient</h1>
+    <SetupWeb {state} on:next={next} />
+  </div>
+{:else if mods && packs}
+  <h1
+    class="m3-font-headline-small"
+    style="height: 0; margin: 0; overflow: hidden;"
+  >
+    Mart
+  </h1>
+  <Mart {mods} {packs} />
+{:else}
+  <div class="article">
+    <h1 class="m3-font-headline-small">Check your internet</h1>
+    <p>Failed to load mods/packs</p>
   </div>
 {/if}
 
@@ -60,11 +99,13 @@
 
 <style>
   .article {
-    width: min(40rem, calc(100vw - 6rem));
+    width: min(40rem, calc(100vw - 8rem));
     align-self: center;
-    margin: 0 2rem;
   }
-  h2 {
+  h1 {
     margin: 0 0 2rem 0;
+  }
+  p {
+    margin: 0;
   }
 </style>

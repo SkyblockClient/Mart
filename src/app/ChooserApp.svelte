@@ -1,7 +1,7 @@
 <script lang="ts">
-  import Icon from "@iconify/svelte";
-  import iconPlus from "@iconify-icons/ic/add";
-  import iconCheck from "@iconify-icons/ic/check";
+  import Icon from "./lib/Icon.svelte";
+  import iconPlus from "@ktibow/iconset-ic/add";
+  import iconCheck from "@ktibow/iconset-ic/check";
   import { filesystem, os } from "@neutralinojs/lib";
   import { storage, separator, isDirectory } from "./neutralino";
   import { Button } from "m3-svelte";
@@ -171,7 +171,7 @@
     height: 2.5rem;
     border-radius: 1.25rem;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 200ms;
   }
   label {
     padding: 0 1rem;

@@ -22,7 +22,7 @@ export const storage: Record<string, any> = new Proxy(
       // @ts-expect-error it's fine, we meant undefined
       await nlStorage.setData(key, undefined);
     },
-  }
+  },
 );
 export const isFile = async (path: string) => {
   try {
@@ -56,7 +56,7 @@ export const recursivelyCreate = async (base: string, parts: string[]) => {
 };
 export const recursivelyDelete = async (path: string) => {
   const contents = (await filesystem.readDirectory(path)).filter(
-    (entry) => entry.entry != "." && entry.entry != ".."
+    (entry) => entry.entry != "." && entry.entry != "..",
   );
   await Promise.all(
     contents.map(async (entry) => {
@@ -66,7 +66,7 @@ export const recursivelyDelete = async (path: string) => {
       } else {
         await recursivelyDelete(entryPath);
       }
-    })
+    }),
   );
   await filesystem.removeDirectory(path);
 };
