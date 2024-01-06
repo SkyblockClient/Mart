@@ -29,6 +29,7 @@
   const handle = (e: CustomEvent<FileSystemHandle>) => {
     console.group("validating folder (web)...");
     const h = e.detail;
+    console.log(h);
     if (h.name != ".minecraft" && h.name != "minecraft") {
       snackbar({
         message: "Not a .minecraft folder",
