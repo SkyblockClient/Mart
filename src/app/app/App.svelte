@@ -4,7 +4,7 @@
   import { isDirectory, separator } from "./neutralino";
   import ChooserApp from "./ChooserApp.svelte";
   import SetupApp from "./SetupApp.svelte";
-  import Mart from "./Mart.svelte";
+  import Mart from "../mart/Mart.svelte";
 
   let snackbar: (data: SnackbarIn) => void;
 

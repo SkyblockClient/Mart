@@ -3,7 +3,7 @@
   import WebUnsupported from "./WebUnsupported.svelte";
   import ChooserWeb from "./ChooserWeb.svelte";
   import SetupWeb from "./SetupWeb.svelte";
-  import Mart from "./Mart.svelte";
+  import Mart from "./mart/Mart.svelte";
 
   let snackbar: (data: SnackbarIn) => void;
 
@@ -25,6 +25,9 @@
   let mods: any[], packs: any[];
   window.mods.then((m: any[]) => (mods = m));
   window.packs.then((p: any[]) => (packs = p));
+
+  let modsInstalled: string[] = [],
+    packsInstalled: string[] = [];
 
   const handle = (e: CustomEvent<FileSystemHandle>) => {
     console.group("validating folder (web)...");
@@ -52,6 +55,7 @@
   };
   const next = async (e: CustomEvent<FileSystemDirectoryHandle>) => {
     console.group("opening mart (web)...");
+
     const [mods, packs] = await Promise.all([
       e.detail.getDirectoryHandle("mods", { create: true }),
       e.detail.getDirectoryHandle("resourcepacks", { create: true }),
@@ -63,7 +67,44 @@
       mods,
       packs,
     };
+    updateMods();
+    updatePacks();
     console.groupEnd();
+  };
+
+  const listDir = async (dir: string) => {
+    // @ts-expect-error
+    const handle = await state.skyclient.getDirectoryHandle(dir);
+
+    const contents = [];
+    for await (const file of handle.keys()) {
+      contents.push(file);
+    }
+    return contents;
+  };
+  const updateMods = async () => {
+    console.group("updating mods (web)...");
+    modsInstalled = await listDir("mods");
+    console.groupEnd();
+  };
+  const updatePacks = async () => {
+    console.group("updating packs (web)...");
+    packsInstalled = await listDir("resourcepacks");
+    console.groupEnd();
+  };
+  const installMod = async (file: string, url: string) => {
+    // console.group("installing mod (web)...");
+    // const respPromise = fetch(url);
+    // const handlePromise = ((async () => {
+    // const mods = await (state as {
+    //   handle: FileSystemDirectoryHandle;
+    //   skyclient: FileSystemDirectoryHandle;
+    // }).skyclient.getDirectoryHandle("mods");
+    // const handle = await mods.getFileHandle(file, { create: true });
+    // return await handle.createWritable();
+    // })())
+    // const [resp, handle] = await Promise.all([respPromise, handlePromise]);
+    // resp.body!.pipeTo(handle);
   };
 </script>
 
@@ -88,7 +129,14 @@
   >
     Mart
   </h1>
-  <Mart {mods} {packs} />
+  <Mart
+    {mods}
+    {packs}
+    {modsInstalled}
+    {packsInstalled}
+    on:updateMods={updateMods}
+    on:updatePacks={updatePacks}
+  />
 {:else}
   <div class="article">
     <h1 class="m3-font-headline-small">Check your internet</h1>

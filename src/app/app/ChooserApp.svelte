@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Icon from "./lib/Icon.svelte";
+  import Icon from "../lib/Icon.svelte";
   import iconPlus from "@ktibow/iconset-ic/add";
   import iconCheck from "@ktibow/iconset-ic/check";
   import { filesystem, os } from "@neutralinojs/lib";

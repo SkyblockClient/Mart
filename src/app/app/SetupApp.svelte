@@ -7,7 +7,7 @@
     recursivelyDelete,
     separator,
   } from "./neutralino";
-  import Setup from "./Setup.svelte";
+  import Setup from "../Setup.svelte";
 
   export let state: {
     page: "setup";
