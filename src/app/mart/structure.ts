@@ -1,8 +1,8 @@
 export const map = (
   _mods: any[],
   _packs: any[],
-  modsInstalled: string[],
-  packsInstalled: string[]
+  modsInstalled: Set<string>,
+  packsInstalled: Set<string>
 ) => {
   const bundles = [];
   const mods = [];
@@ -30,7 +30,7 @@ export const map = (
         });
       }
 
-      const isInstalled = deps.every((dep) => modsInstalled.includes(dep.file));
+      const isInstalled = deps.every((dep) => modsInstalled.has(dep.file));
 
       bundles.push({
         ...base,
@@ -40,7 +40,7 @@ export const map = (
     } else {
       mods.push({
         ...base,
-        installed: modsInstalled.includes(mod.file),
+        installed: modsInstalled.has(mod.file),
         file: mod.file,
         url: mod.url,
       });
@@ -53,7 +53,7 @@ export const map = (
       title: pack.display,
       enabled: pack.enabled,
 
-      installed: packsInstalled.includes(pack.file),
+      installed: packsInstalled.has(pack.file),
       file: pack.file,
       url: pack.url,
     });

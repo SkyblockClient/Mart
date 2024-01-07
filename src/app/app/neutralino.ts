@@ -1,7 +1,15 @@
-import { filesystem, storage as nlStorage } from "@neutralinojs/lib";
+import { filesystem, storage as nlStorage, os } from "@neutralinojs/lib";
 import { parse, stringify } from "devalue";
 
 export const separator = NL_OS == "Windows" ? "\\" : "/";
+export const cache = (async () => {
+  const globalCache = await os.getPath("cache");
+  const cache = `${globalCache}${separator}Mart 2024-01-07`;
+  try {
+    await filesystem.createDirectory(cache);
+  } catch {}
+  return cache;
+})();
 export const storage: Record<string, any> = new Proxy(
   {},
   {
@@ -22,7 +30,7 @@ export const storage: Record<string, any> = new Proxy(
       // @ts-expect-error it's fine, we meant undefined
       await nlStorage.setData(key, undefined);
     },
-  },
+  }
 );
 export const isFile = async (path: string) => {
   try {
@@ -56,7 +64,7 @@ export const recursivelyCreate = async (base: string, parts: string[]) => {
 };
 export const recursivelyDelete = async (path: string) => {
   const contents = (await filesystem.readDirectory(path)).filter(
-    (entry) => entry.entry != "." && entry.entry != "..",
+    (entry) => entry.entry != "." && entry.entry != ".."
   );
   await Promise.all(
     contents.map(async (entry) => {
@@ -66,7 +74,7 @@ export const recursivelyDelete = async (path: string) => {
       } else {
         await recursivelyDelete(entryPath);
       }
-    }),
+    })
   );
   await filesystem.removeDirectory(path);
 };

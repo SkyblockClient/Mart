@@ -1,5 +1,6 @@
 <script lang="ts">
   import { SnackbarAnim, type SnackbarIn } from "m3-svelte";
+  import { download } from "./lib/network";
   import WebUnsupported from "./WebUnsupported.svelte";
   import ChooserWeb from "./ChooserWeb.svelte";
   import SetupWeb from "./SetupWeb.svelte";
@@ -26,8 +27,8 @@
   window.mods.then((m: any[]) => (mods = m));
   window.packs.then((p: any[]) => (packs = p));
 
-  let modsInstalled: string[] = [],
-    packsInstalled: string[] = [];
+  let modsInstalled: Set<string> = new Set(),
+    packsInstalled: Set<string> = new Set();
 
   const handle = (e: CustomEvent<FileSystemHandle>) => {
     console.group("validating folder (web)...");
@@ -76,11 +77,15 @@
     // @ts-expect-error
     const handle = await state.skyclient.getDirectoryHandle(dir);
 
-    const contents = [];
+    const contents: Set<string> = new Set();
     for await (const file of handle.keys()) {
-      contents.push(file);
+      contents.add(file);
     }
     return contents;
+  };
+  const downloadFile = async (url: string, handle: FileSystemFileHandle) => {
+    const resp = await download(url);
+    await resp!.body!.pipeTo(await handle.createWritable());
   };
   const updateMods = async () => {
     console.group("updating mods (web)...");
@@ -93,18 +98,32 @@
     console.groupEnd();
   };
   const installMod = async (file: string, url: string) => {
-    // console.group("installing mod (web)...");
-    // const respPromise = fetch(url);
-    // const handlePromise = ((async () => {
-    // const mods = await (state as {
-    //   handle: FileSystemDirectoryHandle;
-    //   skyclient: FileSystemDirectoryHandle;
-    // }).skyclient.getDirectoryHandle("mods");
-    // const handle = await mods.getFileHandle(file, { create: true });
-    // return await handle.createWritable();
-    // })())
-    // const [resp, handle] = await Promise.all([respPromise, handlePromise]);
-    // resp.body!.pipeTo(handle);
+    console.group("installing mod (web)...");
+    const mods = await (
+      state as {
+        handle: FileSystemDirectoryHandle;
+        skyclient: FileSystemDirectoryHandle;
+      }
+    ).skyclient.getDirectoryHandle("mods");
+    const handle = await mods.getFileHandle(file, { create: true });
+
+    await downloadFile(url, handle);
+    await updateMods();
+    console.groupEnd();
+  };
+  const installPack = async (file: string, url: string) => {
+    console.group("installing pack (web)...");
+    const packs = await (
+      state as {
+        handle: FileSystemDirectoryHandle;
+        skyclient: FileSystemDirectoryHandle;
+      }
+    ).skyclient.getDirectoryHandle("resourcepacks");
+    const handle = await packs.getFileHandle(file, { create: true });
+
+    await downloadFile(url, handle);
+    await updatePacks();
+    console.groupEnd();
   };
 </script>
 
@@ -134,6 +153,8 @@
     {packs}
     {modsInstalled}
     {packsInstalled}
+    {installMod}
+    {installPack}
     on:updateMods={updateMods}
     on:updatePacks={updatePacks}
   />

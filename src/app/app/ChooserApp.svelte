@@ -177,6 +177,9 @@
     padding: 0 1rem;
     flex-grow: 1;
   }
+  label:hover {
+    background-color: rgb(var(--m3-scheme-surface-container-high));
+  }
   label.selected {
     background-color: rgb(var(--m3-scheme-primary-container));
     color: rgb(var(--m3-scheme-on-primary-container));

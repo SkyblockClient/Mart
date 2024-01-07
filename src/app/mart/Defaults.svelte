@@ -1,37 +1,54 @@
 <script lang="ts">
-  import doneAll from "@ktibow/iconset-ic/done-all";
-  import { Button } from "m3-svelte";
-  import { flip } from "svelte/animate";
+  import iconDoneAll from "@ktibow/iconset-ic/done-all";
+  import iconDownloads from "@ktibow/iconset-ic/round-download-for-offline";
+  import { Button, LinearProgress } from "m3-svelte";
   import Icon from "../lib/Icon.svelte";
 
   export let items: { id: string; title: string; installed: boolean }[];
-  $: itemsAddable = items.filter((i) => !i.installed);
+  export let installItem: (id: string) => Promise<void>;
 
-  const install = () => {
-    if (!itemsAddable.length) {
-      itemsAddable = [{ title: "sussy" }];
-      return;
-    }
-    itemsAddable = itemsAddable.slice(1);
+  $: addableItems = items.filter((i) => !i.installed);
+
+  let installStatus: { total: number; done: number } | undefined;
+  const install = async () => {
+    installStatus = { total: addableItems.length, done: 0 };
+    await Promise.all(
+      addableItems.map(async (item) => {
+        await installItem(item.id);
+        installStatus!.done++;
+      })
+    );
+    installStatus = undefined;
   };
 </script>
 
-{#if itemsAddable.length > 0}
+{#if installStatus}
+  <div class="tip" style="margin-bottom: 0.5rem">
+    <Icon icon={iconDownloads} />
+    Downloading defaults...
+  </div>
+  <LinearProgress
+    display="flex"
+    percent={(installStatus.done / installStatus.total) * 100}
+  />
+{:else if addableItems.length > 0}
   <div class="row">
-    {#each itemsAddable.slice(0, 3) as item, i (item.id)}
-      <div class="item" data-i={i} animate:flip={{ duration: 400 }}>
+    {#each addableItems.slice(0, 3) as item}
+      <div class="item">
         {item.title}
       </div>
     {/each}
-    {#if itemsAddable.length > 3}
+    {#if addableItems.length > 3}
       <div class="more">...</div>
     {/if}
   </div>
-  <Button type="tonal" on:click={install}>Start installing</Button>
+  {#if !installStatus}
+    <Button type="tonal" on:click={install}>Start installing</Button>
+  {/if}
 {:else}
   <div class="tip">
-    <Icon icon={doneAll} />
-    You have all default mods
+    <Icon icon={iconDoneAll} />
+    You have the default mods
   </div>
 {/if}
 
@@ -47,24 +64,17 @@
     padding: 1rem;
     border-radius: 1.5rem;
   }
-  .item[data-i="0"] {
+  .item:nth-of-type(1) {
     background-color: rgb(var(--m3-scheme-primary-container));
-    white-space: nowrap;
     min-width: 10rem;
     flex-grow: 1;
-    transition:
-      background-color 500ms,
-      min-width 500ms;
   }
-  .item[data-i="1"] {
+  .item:nth-of-type(2) {
     background-color: rgb(var(--m3-scheme-secondary-container));
     min-width: 8rem;
     flex-grow: 1;
-    transition:
-      background-color 500ms,
-      min-width 500ms;
   }
-  .item[data-i="2"] {
+  .item:nth-of-type(3) {
     background-color: rgb(var(--m3-scheme-surface-container-high));
     min-width: 6rem;
   }

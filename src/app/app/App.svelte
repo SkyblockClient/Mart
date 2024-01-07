@@ -1,10 +1,11 @@
 <script lang="ts">
   import { filesystem } from "@neutralinojs/lib";
   import { SnackbarAnim, type SnackbarIn } from "m3-svelte";
-  import { isDirectory, separator } from "./neutralino";
+  import Mart from "../mart/Mart.svelte";
+  import { download } from "../lib/network";
+  import { cache, isDirectory, separator } from "./neutralino";
   import ChooserApp from "./ChooserApp.svelte";
   import SetupApp from "./SetupApp.svelte";
-  import Mart from "../mart/Mart.svelte";
 
   let snackbar: (data: SnackbarIn) => void;
 
@@ -23,6 +24,9 @@
   let mods: any[], packs: any[];
   window.mods.then((m: any[]) => (mods = m));
   window.packs.then((p: any[]) => (packs = p));
+
+  let modsInstalled: Set<string> = new Set(),
+    packsInstalled: Set<string> = new Set();
 
   const path = async (e: CustomEvent<string>) => {
     console.group("validating folder (app)...");
@@ -71,6 +75,61 @@
       mods: `${e.detail}${separator}mods`,
       packs: `${e.detail}${separator}resourcepacks`,
     };
+    updateMods();
+    updatePacks();
+    console.groupEnd();
+  };
+
+  const listDir = async (path: string) => {
+    const entries = await filesystem.readDirectory(path);
+
+    const contents: Set<string> = new Set();
+    for (const { entry } of entries) {
+      if (entry == "." || entry == "..") continue;
+      contents.add(entry);
+    }
+    return contents;
+  };
+  const downloadFile = async (url: string, path: string) => {
+    const resp = await download(url);
+    const bytes = await resp.arrayBuffer();
+    await filesystem.writeBinaryFile(path, bytes);
+    await filesystem.copyFile(path, await cache);
+  };
+  const updateMods = async () => {
+    console.group("updating mods (app)...");
+    // @ts-expect-error
+    modsInstalled = await listDir(state.mods);
+    console.groupEnd();
+  };
+  const updatePacks = async () => {
+    console.group("updating packs (app)...");
+    // @ts-expect-error
+    packsInstalled = await listDir(state.packs);
+    console.groupEnd();
+  };
+  const installMod = async (file: string, url: string) => {
+    console.group("installing mod (app)...");
+    // @ts-expect-error
+    const location = `${state.mods}${separator}${file}`;
+    try {
+      filesystem.copyFile(`${await cache}${separator}${file}`, location);
+    } catch {
+      await downloadFile(url, location);
+    }
+    await updateMods();
+    console.groupEnd();
+  };
+  const installPack = async (file: string, url: string) => {
+    console.group("installing pack (app)...");
+    // @ts-expect-error
+    const location = `${state.packs}${separator}${file}`;
+    try {
+      filesystem.copyFile(`${await cache}${separator}${file}`, location);
+    } catch {
+      await downloadFile(url, location);
+    }
+    await updatePacks();
     console.groupEnd();
   };
 </script>
@@ -92,7 +151,16 @@
   >
     Mart
   </h1>
-  <Mart {mods} {packs} />
+  <Mart
+    {mods}
+    {packs}
+    {modsInstalled}
+    {packsInstalled}
+    {installMod}
+    {installPack}
+    on:updateMods={updateMods}
+    on:updatePacks={updatePacks}
+  />
 {:else}
   <div class="article">
     <h1 class="m3-font-headline-small">Check your internet</h1>
