@@ -1,8 +1,8 @@
 {
   "type": "module",
   "scripts": {
-    "app-1": "vite build --mode neutralino",
-    "app-2": "neu run --frontend-lib-dev",
+    "app-1": "vite build --mode neutralino; vite dev",
+    "app-2": "neu run",
     "app-build": "vite build --mode neutralino; rm -rf dist; neu build; chmod +x dist/Mart/Mart-linux* dist/Mart/Mart-mac*",
     "check": "svelte-check",
     "dev": "vite dev",
@@ -13,20 +13,20 @@
     "@iconify/types": "^2.0.0",
     "@ktibow/iconset-ic": "^1.0.32",
     "@neutralinojs/lib": "^3.13.0",
-    "@neutralinojs/neu": "^10.1.0",
+    "@neutralinojs/neu": "^10.1.1",
     "@sveltejs/vite-plugin-svelte": "^3.0.1",
     "@tsconfig/svelte": "^5.0.2",
     "@types/wicg-file-system-access": "^2023.10.4",
     "devalue": "^4.3.2",
-    "m3-svelte": "^3.0.1",
-    "prettier": "^3.1.1",
-    "svelte-check": "^3.6.2",
+    "m3-svelte": "^3.1.3",
+    "prettier": "^3.2.4",
+    "svelte-check": "^3.6.3",
     "tslib": "^2.6.2",
     "typescript": "^5.3.3",
-    "vite": "^5.0.10",
-    "wrangler": "^3.22.3"
+    "vite": "^5.0.11",
+    "wrangler": "^3.22.5"
   },
   "dependencies": {
-    "svelte": "^4.2.8"
+    "svelte": "^4.2.9"
   }
 }

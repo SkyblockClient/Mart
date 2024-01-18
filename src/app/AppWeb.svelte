@@ -85,6 +85,12 @@
   };
   const downloadFile = async (url: string, handle: FileSystemFileHandle) => {
     const resp = await download(url);
+    if (!resp.ok) {
+      snackbar({
+        message: `${resp.status} while downloading ${url.split("/").pop()}`,
+      });
+      throw new Error(resp.statusText);
+    }
     await resp!.body!.pipeTo(await handle.createWritable());
   };
   const updateMods = async () => {
@@ -98,7 +104,7 @@
     console.groupEnd();
   };
   const installMod = async (file: string, url: string) => {
-    console.group("installing mod (web)...");
+    console.log("installing mod", { file, url });
     const mods = await (
       state as {
         handle: FileSystemDirectoryHandle;
@@ -109,10 +115,21 @@
 
     await downloadFile(url, handle);
     await updateMods();
-    console.groupEnd();
+  };
+  const deleteMod = async (file: string) => {
+    console.log("deleting mod", file);
+    const mods = await (
+      state as {
+        handle: FileSystemDirectoryHandle;
+        skyclient: FileSystemDirectoryHandle;
+      }
+    ).skyclient.getDirectoryHandle("mods");
+
+    await mods.removeEntry(file);
+    await updateMods();
   };
   const installPack = async (file: string, url: string) => {
-    console.group("installing pack (web)...");
+    console.log("installing pack", { file, url });
     const packs = await (
       state as {
         handle: FileSystemDirectoryHandle;
@@ -123,7 +140,18 @@
 
     await downloadFile(url, handle);
     await updatePacks();
-    console.groupEnd();
+  };
+  const deletePack = async (file: string) => {
+    console.log("deleting pack", file);
+    const packs = await (
+      state as {
+        handle: FileSystemDirectoryHandle;
+        skyclient: FileSystemDirectoryHandle;
+      }
+    ).skyclient.getDirectoryHandle("resourcepacks");
+
+    await packs.removeEntry(file);
+    await updatePacks();
   };
 </script>
 
@@ -154,7 +182,9 @@
     {modsInstalled}
     {packsInstalled}
     {installMod}
+    {deleteMod}
     {installPack}
+    {deletePack}
     on:updateMods={updateMods}
     on:updatePacks={updatePacks}
   />

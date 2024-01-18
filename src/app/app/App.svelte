@@ -92,6 +92,12 @@
   };
   const downloadFile = async (url: string, path: string) => {
     const resp = await download(url);
+    if (!resp.ok) {
+      snackbar({
+        message: `${resp.status} while downloading ${url.split("/").pop()}`,
+      });
+      throw new Error(resp.statusText);
+    }
     const bytes = await resp.arrayBuffer();
     await filesystem.writeBinaryFile(path, bytes);
     await filesystem.copyFile(path, await cache);
@@ -109,28 +115,38 @@
     console.groupEnd();
   };
   const installMod = async (file: string, url: string) => {
-    console.group("installing mod (app)...");
+    console.log("installing mod", { file, url });
     // @ts-expect-error
     const location = `${state.mods}${separator}${file}`;
     try {
-      filesystem.copyFile(`${await cache}${separator}${file}`, location);
+      await filesystem.copyFile(`${await cache}${separator}${file}`, location);
     } catch {
       await downloadFile(url, location);
     }
     await updateMods();
-    console.groupEnd();
+  };
+  const deleteMod = async (file: string) => {
+    console.log("deleting mod", file);
+    // @ts-expect-error
+    await filesystem.removeFile(`${state.mods}${separator}${file}`);
+    await updateMods();
   };
   const installPack = async (file: string, url: string) => {
-    console.group("installing pack (app)...");
+    console.log("installing pack", { file, url });
     // @ts-expect-error
     const location = `${state.packs}${separator}${file}`;
     try {
-      filesystem.copyFile(`${await cache}${separator}${file}`, location);
+      await filesystem.copyFile(`${await cache}${separator}${file}`, location);
     } catch {
       await downloadFile(url, location);
     }
     await updatePacks();
-    console.groupEnd();
+  };
+  const deletePack = async (file: string) => {
+    console.log("deleting pack", file);
+    // @ts-expect-error
+    await filesystem.removeFile(`${state.packs}${separator}${file}`);
+    await updatePacks();
   };
 </script>
 
@@ -157,7 +173,9 @@
     {modsInstalled}
     {packsInstalled}
     {installMod}
+    {deleteMod}
     {installPack}
+    {deletePack}
     on:updateMods={updateMods}
     on:updatePacks={updatePacks}
   />
