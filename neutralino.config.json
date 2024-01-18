@@ -22,12 +22,10 @@
   "cli": {
     "binaryName": "Mart",
     "resourcesPath": "/build/",
-    "binaryVersion": "4.14.1",
-    "clientVersion": "3.12.0",
+    "binaryVersion": "4.15.0",
     "frontendLibrary": {
       "patchFile": "/index-neutralino.html",
-      "devUrl": "http://localhost:5173/index-neutralino.html",
-      "devCommand": "pnpm run dev"
+      "devUrl": "http://localhost:5173/index-neutralino.html"
     }
   }
 }
