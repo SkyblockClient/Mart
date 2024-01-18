@@ -34,7 +34,7 @@
     align-items: center;
     text-align: center;
 
-    background-color: rgb(var(--m3-scheme-error) / 0.25);
+    background-color: rgb(var(--m3-scheme-surface-container));
     padding: 1.5rem;
     border-radius: 1.25rem;
   }
