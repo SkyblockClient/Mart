@@ -1,5 +1,8 @@
 # Mart
 
+> [!IMPORTANT]
+> Mart is still under development. It's not ready for normal users to use yet.
+
 a thing that installs [skyclient](https://skyclient.co/)
 see the latest release for info on how to run it
 
