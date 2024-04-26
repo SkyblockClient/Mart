@@ -50,7 +50,7 @@ export const renderFolderChooserApp = async (elem) => {
           detected ? "Mart found it for you." : "Choose it below."
         })
         <br />
-        Also, if you're using MultiMC/PolyMC, make a new 1.8.9 Forge instance first.
+        Also, if you're using MultiMC/Prism Launcher, make a new 1.8.9 Forge instance first.
       </div>
     </div>
   `;

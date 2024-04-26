@@ -48,7 +48,7 @@ export const renderFolderChooserWeb = async (elem) => {
       <span class="mti">info</span>
       <div class="inline-block flex-grow">
         <p class="font-bold">Try downloading Mart as an app if the web version doesn't work.</p>
-        <p>Also, if you're using MultiMC/PolyMC, make a new 1.8.9 Forge instance first.</p>
+        <p>Also, if you're using MultiMC/Prism Launcher, make a new 1.8.9 Forge instance first.</p>
       </div>
     </div>
     <p id="result"></p>
