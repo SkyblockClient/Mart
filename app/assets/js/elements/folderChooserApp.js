@@ -1,9 +1,7 @@
 ///<reference path="../api/base.js" />
 import { doesFileExistNL, SEPARATOR } from "../api/fileApi.js";
 export const renderFolderChooserApp = async (elem) => {
-  const options = html`
-    <ul></ul>
-  `;
+  const options = html` <ul></ul> `;
   const detectedOptions = await recommendPaths();
   detectedOptions.forEach((instance) => {
     const option = html`
@@ -22,7 +20,9 @@ export const renderFolderChooserApp = async (elem) => {
     <li>
       <input type="radio" name="folder" value="" />
       <span class="text-gray-200"></span>
-      <button class="bg-nord10 hover:bg-nord10/70 transition-all text-white p-2 rounded-md">
+      <button
+        class="bg-nord10 hover:bg-nord10/70 transition-all text-white p-2 rounded-md"
+      >
         Choose another folder
       </button>
     </li>
@@ -33,7 +33,9 @@ export const renderFolderChooserApp = async (elem) => {
     customOption.querySelector("span").textContent = previousPath;
   }
   customOption.querySelector("button").addEventListener("click", async () => {
-    const folder = await Neutralino.os.showFolderDialog("Choose your .minecraft folder");
+    const folder = await Neutralino.os.showFolderDialog(
+      "Choose your .minecraft folder"
+    );
     if (folder) {
       customOption.querySelector("input").checked = true;
       customOption.querySelector("input").value = folder;
@@ -50,7 +52,7 @@ export const renderFolderChooserApp = async (elem) => {
           detected ? "Mart found it for you." : "Choose it below."
         })
         <br />
-        Also, if you're using MultiMC/PolyMC, make a new 1.8.9 Forge instance first.
+        Also, if you're using a MultiMC-based launcher, make a new 1.8.9 Forge instance first.
       </div>
     </div>
   `;
@@ -60,7 +62,12 @@ export const renderFolderChooserApp = async (elem) => {
 const checkInstance = async (path) => {
   const instances = await Neutralino.filesystem.readDirectory(path);
   const instanceWork = instances.map(async (dir) => {
-    if (dir.entry.startsWith(".") || dir.entry.startsWith("_") || dir.type != "DIRECTORY") return;
+    if (
+      dir.entry.startsWith(".") ||
+      dir.entry.startsWith("_") ||
+      dir.type != "DIRECTORY"
+    )
+      return;
     const instancePath = path + SEPARATOR + dir.entry;
     try {
       const config = await Neutralino.filesystem.readFile(
@@ -69,7 +76,9 @@ const checkInstance = async (path) => {
       const configJson = JSON.parse(config);
       if (
         configJson.components.some(
-          (c) => c.cachedName == "Forge" && c.cachedRequires.some((r) => r.equals == "1.8.9")
+          (c) =>
+            c.cachedName == "Forge" &&
+            c.cachedRequires.some((r) => r.equals == "1.8.9")
         )
       )
         return instancePath + SEPARATOR + ".minecraft";
@@ -87,7 +96,11 @@ const recommendPaths = async () => {
     pathsFound = [
       [true, home + "/.local/share/PolyMC/instances"],
       [true, home + "/.local/share/PrismLauncher/instances"],
-      [true, home + "/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher/instances"],
+      [
+        true,
+        home +
+          "/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher/instances",
+      ],
       [false, home + "/.minecraft"],
       [false, home + "/.var/app/com.mojang.Minecraft/data/minecraft"],
     ];
