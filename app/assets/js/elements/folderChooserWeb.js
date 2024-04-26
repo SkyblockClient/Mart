@@ -8,7 +8,9 @@ export const renderFolderChooserWeb = async (elem) => {
       your .minecraft folder here
       <br />
       Or
-      <span class="group-hover:font-bold transition-all duration-500">click</span>
+      <span class="group-hover:font-bold transition-all duration-500"
+        >click</span
+      >
       to choose it
     </div>
   `;
@@ -34,12 +36,15 @@ export const renderFolderChooserWeb = async (elem) => {
     e.preventDefault();
     e.stopPropagation();
     dropText.classList.remove("font-bold");
-    const dropped = Array.from(e.dataTransfer.items).find((item) => item.kind == "file");
+    const dropped = Array.from(e.dataTransfer.items).find(
+      (item) => item.kind == "file"
+    );
     window.chosenHandle = await dropped.getAsFileSystemHandle();
     recognizeFolder();
   });
   dropArea.addEventListener("click", async () => {
-    if (!elem.querySelector("details")) elem.querySelector("#result").prepend(errorExplanation);
+    if (!elem.querySelector("details"))
+      elem.querySelector("#result").prepend(errorExplanation);
     window.chosenHandle = await window.showDirectoryPicker();
     recognizeFolder();
   });
@@ -48,7 +53,7 @@ export const renderFolderChooserWeb = async (elem) => {
       <span class="mti">info</span>
       <div class="inline-block flex-grow">
         <p class="font-bold">Try downloading Mart as an app if the web version doesn't work.</p>
-        <p>Also, if you're using MultiMC/Prism Launcher, make a new 1.8.9 Forge instance first.</p>
+        <p>Also, if you're using a MultiMC-based launcher, make a new 1.8.9 Forge instance first.</p>
       </div>
     </div>
     <p id="result"></p>
@@ -83,7 +88,12 @@ export const renderFolderChooserWeb = async (elem) => {
           <code class="font-mono">showDirectoryPicker</code>
           API.
           <br />
-          Use Chrome, Edge, or <a class="underline" href="https://github.com/KTibow/Mart/releases/latest">download Mart as an app.</a>
+          Use Chrome, Edge, or
+          <a
+            class="underline"
+            href="https://github.com/KTibow/Mart/releases/latest"
+            >download Mart as an app.</a
+          >
         </div>
       </div>
     `;
