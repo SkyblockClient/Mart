@@ -53,7 +53,7 @@ export const renderFolderChooserWeb = async (elem) => {
       <span class="mti">info</span>
       <div class="inline-block flex-grow">
         <p class="font-bold">Try downloading Mart as an app if the web version doesn't work.</p>
-        <p>Also, if you're using a MultiMC-based launcher, make a new 1.8.9 Forge instance first.</p>
+        <p>Also, if you're using PrismLauncher, PolyMC, or MultiMC, make a new 1.8.9 Forge instance first.</p>
       </div>
     </div>
     <p id="result"></p>
@@ -91,7 +91,7 @@ export const renderFolderChooserWeb = async (elem) => {
           Use Chrome, Edge, or
           <a
             class="underline"
-            href="https://github.com/KTibow/Mart/releases/latest"
+            href="https://github.com/SkyblockClient/Mart/releases/latest"
             >download Mart as an app.</a
           >
         </div>
